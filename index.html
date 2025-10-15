@@ -150,66 +150,71 @@
     (() => {
       'use strict';
     
-      const rows = [...document.querySelectorAll('.row')];
-      const contents = [...document.querySelectorAll('.tab-content')];
-      const bufferTitle = document.getElementById('bufferTitle');
-      let active = 0;
+      // ------- elements & state -------
+      const rows       = [...document.querySelectorAll('.row')];
+      const contents   = [...document.querySelectorAll('.tab-content')];
+      const bufferTitle= document.getElementById('bufferTitle');
+      const cmd        = document.getElementById('cmd');
+      const cmdInput   = document.getElementById('cmdInput');
+      const cmdList    = document.getElementById('cmdList');
+      const headshot   = document.getElementById('openCmdByClick');
     
+      let active = 0;
+      let searchIndex = [];
+    
+      // ------- viewport sizing (Android-safe) -------
+      const sized = () => {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}`);
+        const h = document.querySelector('.bufferline');
+        const f = document.querySelector('.statusline');
+        document.documentElement.style.setProperty('--head-h', ((h && h.offsetHeight) || 44) + 'px');
+        document.documentElement.style.setProperty('--foot-h', ((f && f.offsetHeight) || 28) + 'px');
+      };
+      sized();
+      window.addEventListener('load', sized);
+      window.addEventListener('resize', sized, {passive:true});
+      window.addEventListener('orientationchange', sized);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) sized(); }, {passive:true});
+    
+      // ------- section switching -------
       function setActive(i){
-        if(i<0) i = rows.length-1;
-        if(i>=rows.length) i = 0;
-        rows.forEach((r,idx)=>r.classList.toggle('active', idx===i));
-        contents.forEach(c=>c.classList.remove('active'));
+        if (!rows.length) return;
+        if (i < 0) i = rows.length - 1;
+        if (i >= rows.length) i = 0;
+    
+        rows.forEach((r,idx)=> r.classList.toggle('active', idx === i));
+        contents.forEach(c => c.classList.remove('active'));
+    
         const id = rows[i].dataset.tab;
-        const target = document.getElementById(id);
+        const target = id && document.getElementById(id);
         if (target) target.classList.add('active');
         if (bufferTitle) bufferTitle.textContent = ':' + id;
+    
         active = i;
       }
-      window.setActive = setActive;
+      window.setActive = setActive; // keep your global hook
     
       setActive(0);
-      rows.forEach((r,idx)=> {
+      rows.forEach((r,idx) => {
         const btn = r.querySelector('.btn');
-        if (btn) btn.addEventListener('click', ()=>setActive(idx), {passive:true});
+        if (btn) btn.addEventListener('click', () => setActive(idx));
       });
     
+      // first-letter quick keys (cycle dupes)
       const indexByLetter = {};
+      const cyclePos = {};
       rows.forEach((r,idx)=>{
         const btn = r.querySelector('.btn');
         if (!btn) return;
         const letter = btn.textContent.trim().charAt(0).toLowerCase();
         (indexByLetter[letter] ??= []).push(idx);
       });
-      const cyclePos = {};
     
-      const cmd = document.getElementById('cmd');
-      const cmdInput = document.getElementById('cmdInput');
-      const cmdList = document.getElementById('cmdList');
-    
-      let searchIndex = [];
-    
-      function openCmd(){
-        if (!cmd || !cmdInput) return;
-        const t = document.getElementById('cmdTitle'); if (t) t.textContent = 'Search content';
-        buildIndex();
-        cmd.style.display = 'grid';
-        cmd.setAttribute('aria-hidden','false');
-        renderCmdList('');
-        cmdInput.value = '';
-        cmdInput.focus();
-      }
-      function closeCmd(){
-        if (!cmd) return;
-        cmd.style.display = 'none';
-        cmd.setAttribute('aria-hidden','true');
-      }
-      const headshot = document.getElementById('openCmdByClick');
-      if (headshot) headshot.addEventListener('click', openCmd, {passive:true});
-    
+      // ------- search palette -------
       const escMap = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
-      function escHTML(s){ return s.replace(/[&<>"']/g, c => escMap[c]); }
-      function escRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+      const escHTML = s => s.replace(/[&<>"']/g, c => escMap[c]);
+      const escRe   = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     
       function clearHighlights(){
         contents.forEach(tab => {
@@ -229,6 +234,7 @@
         const walker = document.createTreeWalker(tab, NodeFilter.SHOW_TEXT, null);
         const nodes = [];
         while (walker.nextNode()) nodes.push(walker.currentNode);
+    
         nodes.forEach(node => {
           const val = node.nodeValue;
           if(!re.test(val)){ re.lastIndex = 0; return; }
@@ -246,21 +252,23 @@
           frag.append(document.createTextNode(val.slice(last)));
           node.parentNode.replaceChild(frag, node);
         });
+    
         const first = tab.querySelector('mark.hit');
         if(first) first.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'});
       }
     
       function buildIndex(){
         searchIndex = rows.map((r, idx) => {
-          const btn = r.querySelector('.btn');
+          const btn   = r.querySelector('.btn');
           const label = btn ? btn.textContent.trim() : ('Section ' + (idx+1));
           const tabId = r.dataset.tab;
-          const node = document.getElementById(tabId);
-          const text = node ? node.textContent.replace(/\s+/g,' ').trim() : '';
+          const node  = tabId && document.getElementById(tabId);
+          const text  = node ? node.textContent.replace(/\s+/g,' ').trim() : '';
           return { label, idx, tabId, text };
         });
       }
     
+      // subsequence-ish score (your logic, kept)
       function fuzzyScore(text, query){
         const a = text.toLowerCase(), b = query.toLowerCase();
         let ti = 0, qi = 0, score = 0, streak = 0;
@@ -356,6 +364,26 @@
         });
       }
     
+      function openCmd(){
+        if (!cmd || !cmdInput) return;
+        const t = document.getElementById('cmdTitle'); if (t) t.textContent = 'Search content';
+        buildIndex();
+        cmd.style.display = 'grid';
+        cmd.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';  // lock page scroll behind overlay
+        cmdInput.value = '';
+        renderCmdList('');
+        cmdInput.focus();
+      }
+      function closeCmd(){
+        if (!cmd) return;
+        cmd.style.display = 'none';
+        cmd.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+      }
+    
+      if (headshot) headshot.addEventListener('click', openCmd);
+    
       if (cmdInput) cmdInput.addEventListener('input', (e)=> renderCmdList(e.target.value));
       if (cmdInput) cmdInput.addEventListener('keydown', (e)=>{
         const items = [...cmdList.querySelectorAll('.cmd-item')];
@@ -374,9 +402,11 @@
             setActive(idx);
             closeCmd();
             clearHighlights();
-            highlightAndScroll(tabId, cmdInput.value.trim());
+            const q = cmdInput.value.trim();
+            if (q) highlightAndScroll(tabId, q);
           }
         }
+        if(e.key === 'Escape'){ e.preventDefault(); closeCmd(); }
       });
     
       if (cmdList) cmdList.addEventListener('click',(e)=>{
@@ -387,10 +417,12 @@
           setActive(idx);
           closeCmd();
           clearHighlights();
-          highlightAndScroll(tabId, cmdInput.value.trim());
+          const q = cmdInput.value.trim();
+          if (q) highlightAndScroll(tabId, q);
         }
       });
     
+      // ------- global keys -------
       window.addEventListener('keydown', (e)=>{
         const tag = (e.target.tagName || '').toLowerCase();
         if(tag === 'input' || tag === 'textarea' || e.target.isContentEditable){
@@ -414,6 +446,7 @@
         }
       }, {passive:false});
     
+      // ------- statusline cursor flavor -------
       document.addEventListener('mousemove', (e)=>{
         const x = Math.max(1, Math.round((e.clientX / window.innerWidth)*80));
         const y = Math.max(1, Math.round((e.clientY / window.innerHeight)*24));
@@ -421,11 +454,12 @@
         if (c) c.textContent = 'Ln ' + y + ', Col ' + x;
       }, {passive:true});
     
+      // ------- safe contact reveal -------
       const b64 = "a2V2aW4ubWF0dGhldy5yb3dlQGdtYWlsLmNvbQ==";
       const revealBtn = document.getElementById('revealMail');
-      const mailLink = document.getElementById('mailLink');
-      const copied = document.getElementById('copied');
-      function decode(b){ try{ return atob(b); }catch{ return ''; } }
+      const mailLink  = document.getElementById('mailLink');
+      const copied    = document.getElementById('copied');
+      const decode = b => { try{ return atob(b); } catch { return ''; } };
     
       if (revealBtn) revealBtn.addEventListener('click', ()=>{
         const addr = decode(b64);
@@ -451,6 +485,7 @@
         }
       });
     
+      // ------- caret smear -------
       const trails = document.getElementById('trails');
       if (trails){
         const N = 12;
@@ -476,17 +511,8 @@
           });
           requestAnimationFrame(animate);
         })();
-        const setHeights = () => {
-        const h = document.querySelector('.bufferline');
-        const f = document.querySelector('.statusline');
-        document.documentElement.style.setProperty('--head-h', ((h?.offsetHeight)||44) + 'px');
-        document.documentElement.style.setProperty('--foot-h', ((f?.offsetHeight)||28) + 'px');
-      };
-      window.addEventListener('load', setHeights, {passive:true});
-      window.addEventListener('resize', setHeights, {passive:true});
-      window.addEventListener('orientationchange', setHeights);
       }
     })();
-  </script>
+    </script>
 </body>
 </html>

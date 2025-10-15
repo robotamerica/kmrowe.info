@@ -40,8 +40,10 @@ body{
     <rect x='6' y='2' width='4' height='2' fill='%237aa2f7'/>\
     <rect x='6' y='20' width='4' height='2' fill='%237aa2f7'/>\
   </svg>") 8 12, text;
+  -webkit-tap-highlight-color: transparent;
 }
-button,a{ cursor:pointer }
+button,a{ cursor:pointer; touch-action:manipulation }
+
 #trails{ position:fixed; inset:0; pointer-events:none; z-index:70 }
 .caret-trail{
   position:fixed; width:2px; height:12px; background:var(--accent);
@@ -54,8 +56,8 @@ button,a{ cursor:pointer }
   position:sticky; top:0; left:0; right:0; z-index:60;
   display:flex; justify-content:space-between; align-items:center;
   background:var(--gutter); border-bottom:1px solid var(--border);
-  padding-top:calc(env(safe-area-inset-top) + .3rem);
-  padding:.3rem .6rem; font-weight:700;
+  padding: calc(env(safe-area-inset-top) + .3rem) .6rem .3rem;
+  font-weight:700;
 }
 .bufferline #bufferTitle{
   background:var(--bg); border:1px solid var(--border);
@@ -67,8 +69,7 @@ button,a{ cursor:pointer }
   position:fixed; bottom:0; left:0; right:0; z-index:5;
   display:flex; justify-content:space-between; align-items:center;
   background:var(--gutter); border-top:1px solid var(--border);
-  padding-bottom:calc(env(safe-area-inset-bottom) + .25rem);
-  padding:.25rem .6rem;
+  padding: .25rem .6rem calc(env(safe-area-inset-bottom) + .25rem);
 }
 .statusline .pill{ background:var(--accent); color:black; border-radius:.25rem; padding:.05rem .45rem; margin-right:.5rem }
 
@@ -135,16 +136,21 @@ button,a{ cursor:pointer }
   background:var(--bg); border:1px solid var(--border); border-radius:14px;
   box-shadow:var(--shadow); padding:0; overflow:hidden; display:block;
   height:calc(100svh - var(--head-h) - var(--foot-h) - 24px);
+  scrollbar-gutter: stable both-edges;
 }
 @supports (height: 100dvh){
   .content-card{ height:calc(100dvh - var(--head-h) - var(--foot-h) - 24px) }
 }
-.tab-content{ display:none; height:100%; overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; padding:1rem 1.2rem }
+.tab-content{
+  display:none; height:100%; overflow:auto; overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch; padding:1rem 1.2rem;
+  scrollbar-color: rgba(122,162,247,.35) var(--gutter); /* Firefox */
+}
 .tab-content.active{ display:block }
 .content-card h1{ margin:.1rem 0 .35rem 0 }
 .content-card p{ opacity:.92; max-width:70ch }
 
-/* Scrollbar styling */
+/* Scrollbar styling (WebKit) */
 .tab-content::-webkit-scrollbar{ width:10px }
 .tab-content::-webkit-scrollbar-track{ background:var(--gutter); border-left:1px solid var(--border) }
 .tab-content::-webkit-scrollbar-thumb{ background:rgba(122,162,247,.35); border:2px solid var(--gutter); border-radius:10px }
