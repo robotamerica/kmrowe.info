@@ -70,8 +70,10 @@ button,a{ cursor:pointer; touch-action:manipulation }
   display:flex; justify-content:space-between; align-items:center;
   background:var(--gutter); border-top:1px solid var(--border);
   padding: .25rem .6rem calc(env(safe-area-inset-bottom) + .25rem);
+  pointer-events:none; /* let scroll pass through */
 }
 .statusline .pill{ background:var(--accent); color:black; border-radius:.25rem; padding:.05rem .45rem; margin-right:.5rem }
+.statusline .left, .statusline .right, .statusline .pill{ pointer-events:auto } /* keep clickable */
 
 /* Layout */
 .nvim-layout.centered{
@@ -131,19 +133,23 @@ button,a{ cursor:pointer; touch-action:manipulation }
 .btn{ background:transparent; border:0; color:inherit; text-align:left; padding:.25rem .45rem; border-radius:.45rem }
 .btn:focus-visible{ outline:none; box-shadow:0 0 0 2px var(--accent) }
 
-/* Content card with internal scroll */
+/* Content card with internal scroll (mobile-safe) */
 .content-card{
   background:var(--bg); border:1px solid var(--border); border-radius:14px;
   box-shadow:var(--shadow); padding:0; overflow:hidden; display:block;
-  height:calc(100svh - var(--head-h) - var(--foot-h) - 24px);
+  height:calc(100svh - var(--head-h) - var(--foot-h) - 16px);
   scrollbar-gutter: stable both-edges;
 }
+@supports (height: 100lvh){
+  .content-card{ height:calc(100lvh - var(--head-h) - var(--foot-h) - 16px) }
+}
 @supports (height: 100dvh){
-  .content-card{ height:calc(100dvh - var(--head-h) - var(--foot-h) - 24px) }
+  .content-card{ height:calc(100dvh - var(--head-h) - var(--foot-h) - 16px) }
 }
 .tab-content{
   display:none; height:100%; overflow:auto; overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch; padding:1rem 1.2rem;
+  -webkit-overflow-scrolling:touch;
+  padding:1rem 1.2rem calc(1rem + var(--foot-h) + env(safe-area-inset-bottom)); /* clear footer */
   scrollbar-color: rgba(122,162,247,.35) var(--gutter); /* Firefox */
 }
 .tab-content.active{ display:block }
