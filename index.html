@@ -476,6 +476,15 @@
           });
           requestAnimationFrame(animate);
         })();
+        const setHeights = () => {
+        const h = document.querySelector('.bufferline');
+        const f = document.querySelector('.statusline');
+        document.documentElement.style.setProperty('--head-h', ((h?.offsetHeight)||44) + 'px');
+        document.documentElement.style.setProperty('--foot-h', ((f?.offsetHeight)||28) + 'px');
+      };
+      window.addEventListener('load', setHeights, {passive:true});
+      window.addEventListener('resize', setHeights, {passive:true});
+      window.addEventListener('orientationchange', setHeights);
       }
     })();
   </script>
