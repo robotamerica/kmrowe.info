@@ -4,233 +4,480 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>km. rowe – Portfolio</title>
-  <!-- 👾 emoji favicon -->
-  <link rel="icon"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%BE%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%BE%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="preload" href="styles.css" as="style">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Bufferline (updates to :{section}) -->
   <header class="bufferline" role="navigation" aria-label="bufferline">
     <div id="bufferTitle">:about</div>
-    <div class="hint">Ctrl+M: theme · Ctrl+Alt+B: BBS</div>
+    <div class="hint">Ctrl+T: theme · Esc / Ctrl+C: search</div>
   </header>
 
   <main class="nvim-layout centered">
-    <!-- Left rail: headshot + ANSI logo -->
     <aside class="left-rail">
-      <img src="headshot.png" alt="Kevin M. Rowe" class="headshot-left">
-      <pre class="ansi-logo" aria-label="km. rowe (ansi)">
-<span class="c1"> _  __  __        ___                   </span>
-<span class="c2">| |/ / / _| ___  | _ \ _ __  ___ __ _  _</span>
-<span class="c3">| ' <  |  _|/ -_) |   /| '_ \/ -_) _| || |</span>
-<span class="c4">|_|\_\ |_|  \___| |_|_\| .__/\___\__|\_, |</span>
-<span class="c5">                         |_|            | |</span>
-<span class="c6"> km. rowe — geographer · educator · systems thinker</span>
-<span class="c2">           artist · photographer · poet</span>
+      <img src="headshot.png" alt="Kevin M. Rowe" class="headshot-left" id="openCmdByClick">
+      <pre class="ansi-logo" aria-label="km.rowe (ansi)">
+        <span class="rainbow">
+         █████                                                                   
+        ░░███                                                                    
+         ░███ █████ █████████████      ████████   ██████  █████ ███ █████  ██████ 
+         ░███░░███ ░░███░░███░░███    ░░███░░███ ███░░███░░███ ░███░░███  ███░░███
+         ░██████░   ░███ ░███ ░███     ░███ ░░░ ░███ ░███ ░███ ░███ ░███ ░███████ 
+         ░███░░███  ░███ ░███ ░███     ░███     ░███ ░███ ░░███████████  ░███░░░  
+         ████ █████ █████░███ █████ ██ █████    ░░██████   ░░████░████   ░░██████ 
+        ░░░░ ░░░░░ ░░░░░ ░░░ ░░░░░ ░░ ░░░░░      ░░░░░░     ░░░░ ░░░░     ░░░░░░  
+        </span>
+        <span class="c6 subline">  geographer · educator · systems thinker</span>
+        <span class="c2 subline">       artist · photographer · poet</span>
       </pre>
     </aside>
-
-    <!-- Center: NVIM-style floating window -->
-    <section class="center-pane">
+  
+    <section class="right-pane">
       <div class="titlebar">
-        <div class="mode" id="modeLabel">NORMAL</div>
+        <div class="mode">MENU</div>
       </div>
 
       <div class="menu-window">
-        <!-- Menu list -->
         <ul id="menuList" class="menu-grid" role="listbox" aria-label="Main">
-          <li class="row active" data-tab="about"><span class="k">a</span><button class="btn">About</button><span class="k">Enter</span></li>
-          <li class="row" data-tab="profile"><span class="k">p</span><button class="btn">Profile</button><span class="k"></span></li>
-          <li class="row" data-tab="projects"><span class="k">p</span><button class="btn">Projects</button><span class="k"></span></li>
-          <li class="row" data-tab="education"><span class="k">e</span><button class="btn">Education</button><span class="k"></span></li>
-          <li class="row" data-tab="media"><span class="k">m</span><button class="btn">Media</button><span class="k"></span></li>
-          <li class="row" data-tab="philosophy"><span class="k">p</span><button class="btn">Philosophy</button><span class="k"></span></li>
-          <li class="row" data-tab="links"><span class="k">l</span><button class="btn">Links</button><span class="k"></span></li>
+          <li class="row active" data-tab="about"><span class="k">a</span><button class="btn" type="button">About</button><span class="k">Select</span></li>
+          <li class="row" data-tab="profile"><span class="k">p</span><button class="btn" type="button">Profile</button><span class="k"></span></li>
+          <li class="row" data-tab="projects"><span class="k">p</span><button class="btn" type="button">Projects</button><span class="k"></span></li>
+          <li class="row" data-tab="education"><span class="k">e</span><button class="btn" type="button">Education</button><span class="k"></span></li>
+          <li class="row" data-tab="philosophy"><span class="k">p</span><button class="btn" type="button">Philosophy</button><span class="k"></span></li>
+          <li class="row" data-tab="links"><span class="k">l</span><button class="btn" type="button">Links</button><span class="k"></span></li>
         </ul>
-
-        <!-- Content (from your original index.html) -->
-        <article class="content">
-          <div class="tab-content active" id="about">
-            <h1>kevin m. rowe</h1>
-            <p>Geographer, educator, systems thinker, artist, poet</p>
-            <p>km. rowe is a geographer, educator, and multidisciplinary artist based in Xalapa, Mexico. Embracing the principle of <em>festina lente</em> (make haste slowly), km. integrates diligence, balance, and tranquility into his work. He identifies as an anarchist, eschewing hierarchical structures in favor of collaborative and decentralized approaches to life and work.</p>
-
-            <!-- Bot-safe contact (click to reveal or copy) -->
-            <div class="contact">
-              <button id="revealMail" class="shield">Reveal email</button>
-              <a id="mailLink" class="mail hidden" href="#" rel="nofollow noopener">email</a>
-              <span id="copied" class="copied hidden">copied</span>
-            </div>
-          </div>
-
-          <div class="tab-content" id="profile">
-            <ul>
-              <li><strong>Geography &amp; Mapping</strong> GIS, spatial analysis, Leaflet.js, PostGIS</li>
-              <li><strong>Education &amp; Leadership</strong> Curriculum design, team coordination, inclusive + radical pedagogy</li>
-              <li><strong>Creative Technologies</strong> HTML, CSS, JavaScript, Letterpress, Mimeography, Paper, Scissors</li>
-              <li><strong>Workflow Optimization</strong> Slack, VScode, Neovim, CLI</li>
-            </ul>
-          </div>
-
-          <div class="tab-content" id="projects">
-            <ul>
-              <li><strong>Leaflet-WP</strong> WordPress plugin for interactive mapping and storytelling</li>
-              <li><strong>minmem</strong> Minimalist journaling app with mood tagging and privacy-first design</li>
-              <li><strong>Digital Chapbooks</strong> Poetry meets HTML + interface design with ASCII covers and scrolling stanzas</li>
-              <li><strong>invisible city press</strong> Printing and distribution of poetic material</li>
-              <li><strong>Taller Cero</strong> Lo-fi print studio utilising letterpress and mimeography</li>
-              <li><strong>antigallery</strong> Pop-up arts events + errant wayfaring gallery imagining an artistic ecology without capitalists</li>
-              <li><strong>Workshops</strong> Collaborative learning, radical pedagogy, and community building</li>
-              <li><strong>the anarchive</strong> Carefully curated anarchist starter pack + link hive</li>
-              <li><strong>The 404 Commons</strong> A BBS-inspired, decentrailised web architecture for drift-based publishing, where pages are seeds, and discovery replaces the feed</li>
-              <li><strong>The Solarpunk Almanac</strong> A digital almanac taking inspirations from the solarpunk movement</li>
-              <li><strong>Huewave</strong> A language-free blog and moodboard based on colour and sound</li>
-              <li><strong>squiddd</strong> A playful, interpretive blog exploring water-based themes in envioronmentalism</li>
-            </ul>
-          </div>
-
-          <div class="tab-content" id="education">
-            <ul>
-              <li><strong>BSc in Geography</strong> Focus on human-environment interactions and spatial justice</li>
-              <li><strong>MEd in Education</strong> Focus on self-directed learning, unschooling, and deschooling</li>
-              <li><strong>Ongoing Learning</strong> Anarchist pedagogy, open-source tools, experimental artistic practices</li>
-            </ul>
-          </div>
-
-          <div class="tab-content" id="media">
-            <ul>
-              <li><strong>Poetry, Essays, and Writing</strong> Themes of place, identity, community, and resistance</li>
-              <li><strong>Photography</strong> Urban landscape and everyday moments</li>
-              <li><strong>Art</strong> Experimental liberation through collage and letterpress</li>
-              <li><strong>Digital</strong> Interactive tools, publishing systems, and poetic software artifacts</li>
-            </ul>
-          </div>
-
-          <div class="tab-content" id="philosophy">
-            <p>I move fluidly between roles: poet-technologist, workflow artist, and digital cartographer. These aren’t really job titles, they’re ways i work: poetic, precise, and always grounded in systems of care.</p>
-            <p>I create simple tools that empower. I believe in flexibility over rigidity, tools as multi-use instruments, and design as a form of care. My current influences include poets like bpNichol and Gertrude Stein, coders like Fred George, and thinkers like Félix Guattari and bell hooks.</p>
-          </div>
-
-          <div class="tab-content" id="links">
-            <ul>
-              <li><a href="https://kmrowe.me" target="_blank" rel="noopener">kmrowe.me ✍🏽📚</a></li>
-              <li><a href="https://kmnada.mmm.page" target="_blank" rel="noopener">kmnada.mmm.page 📷+🖼️ [old]</a></li>
-              <li><a href="https://kmnada.page" target="_blank" rel="noopener">kmnada.page 📷+🖼️ [new]</a></li>
-              <li><a href="https://robotameri.ca" target="_blank" rel="noopener">robotameri.ca 🤖📓</a></li>
-              <li><a href="https://kmnada.site" target="_blank" rel="noopener">kmnada.site 📸</a></li>
-              <li><a href="https://unexpected.quest" target="_blank" rel="noopener">unexpected.quest 🎒</a></li>
-              <li><a href="https://404commons.com" target="_blank" rel="noopener">the 404 commons grove 🌳</a></li>
-              <li><a href="https://anarchive.surge.sh" target="_blank" rel="noopener">anarchive.surge.sh 🏴</a></li>
-              <li><a href="https://spalmanac.surge.sh" target="_blank" rel="noopener">spalmanac.surge.sh 🌞</a></li>
-              <li><a href="https://huewave.xyz" target="_blank" rel="noopener">huewave 🌈</a></li>
-              <li><a href="https://squiddd.bearblog.dev" target="_blank" rel="noopener">squiddd 🦑</a></li>
-            </ul>
-            <h3>social</h3>
-            <ul>
-              <li><a href="https://special.fish/leaf" target="_blank" rel="noopener">special.fish/leaf 🐟</a></li>
-            </ul>
-          </div>
-        </article>
       </div>
+
+      <article class="content-card">
+        <div class="tab-content active" id="about">
+          <h1>kevin m. rowe</h1>
+          <p>km. rowe is a geographer, educator, and multidisciplinary artist based in Mexico. Embracing the principle of <strong>festina lente</strong> (make haste slowly), km. integrates diligence, balance, and tranquility into his work. He identifies as an anarchist, eschewing hierarchical structures in favor of collaborative and decentralized approaches to life and work.</p>
+          <div class="contact">
+            <button id="revealMail" class="shield" type="button">Reveal email</button>
+            <a id="mailLink" class="mail hidden" href="#" rel="nofollow noopener">email</a>
+            <span id="copied" class="copied hidden">copied</span>
+          </div>
+        </div>
+
+        <div class="tab-content" id="profile">
+          <ul>
+            <li><strong>Geography &amp; Mapping</strong> GIS, spatial analysis, Leaflet.js, PostGIS</li>
+            <li><strong>Education &amp; Leadership</strong> Curriculum design, team coordination, inclusive + radical pedagogy</li>
+            <li><strong>Creative Technologies</strong> HTML, CSS, JavaScript, Letterpress, Mimeography, Paper, Scissors</li>
+            <li><strong>Workflow Optimization</strong> Slack, VScode, Neovim, CLI</li>
+            <li><strong>Systems &amp; Ecology</strong> Soft Stack Ecology, regenerative design, solarpunk infrastructure, small-scale networked systems</li>
+            <li><strong>Design &amp; Publishing</strong> Typography, layout systems, print-to-web/web-to-print translation, digital chapbooks, minimalist editorial design</li>
+            <li><strong>Photography &amp; Fieldwork</strong> Working class documentation, urban + rural exploration</li>
+  </ul>
+</div>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="projects">
+          <ul>
+            <li><strong>Leaflet-WP</strong> WordPress plugin for interactive mapping and storytelling</li>
+            <li><strong>minmem</strong> Minimalist journaling app with mood tagging and privacy-first design</li>
+            <li><strong>Digital Chapbooks</strong> Poetry meets HTML + interface design with ASCII covers and scrolling stanzas</li>
+            <li><strong>invisible city press</strong> Printing and distribution of poetic material</li>
+            <li><strong>Taller Cero</strong> Lo-fi print studio utilising letterpress and mimeography</li>
+            <li><strong>antigallery</strong> Pop-up arts events + errant wayfaring gallery imagining an artistic ecology without capitalists</li>
+            <li><strong>Workshops</strong> Collaborative learning, radical pedagogy, and community building</li>
+            <li><strong>the anarchive</strong> Carefully curated anarchist starter pack + link hive</li>
+            <li><strong>The 404 Commons</strong> A BBS-inspired, decentrailised web architecture for drift-based publishing, where pages are seeds, and discovery replaces the feed</li>
+            <li><strong>The Solarpunk Almanac</strong> A digital almanac taking inspirations from the solarpunk movement</li>
+            <li><strong>Huewave</strong> A language-free blog and moodboard based on colour and sound</li>
+            <li><strong>squiddd</strong> A playful, interpretive blog exploring water-based themes in envioronmentalism</li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="education">
+          <ul>
+            <li><strong>BSc in Geography</strong> Focus on human-environment interactions and spatial justice</li>
+            <li><strong>MEd in Education</strong> Focus on self-directed learning, unschooling, and deschooling</li>
+            <li><strong>Ongoing Learning</strong> Anarchist pedagogy, open-source tools, experimental artistic practices</li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="philosophy">
+          <p>I move fluidly between roles: poet-technologist, workflow artist, and digital cartographer. These aren’t really job titles, they’re ways i work: poetic, precise, and always grounded in systems of care.</p>
+          <p>I create simple tools that empower. I believe in flexibility over rigidity, tools as multi-use instruments, and design as a form of care. My current influences include poets like bpNichol and Gertrude Stein, coders like Fred George, and thinkers like Félix Guattari and bell hooks.</p>
+        </div>
+
+        <div class="tab-content" id="links">
+          <ul>
+            <li><a href="https://kmrowe.me" target="_blank" rel="noopener">kmrowe.me ✍🏽📚</a></li>
+            <li><a href="https://kmnada.mmm.page" target="_blank" rel="noopener">kmnada.mmm.page 📷+🖼️ [old]</a></li>
+            <li><a href="https://kmnada.page" target="_blank" rel="noopener">kmnada.page 📷+🖼️ [new]</a></li>
+            <li><a href="https://robotameri.ca" target="_blank" rel="noopener">robotameri.ca 🤖📓</a></li>
+            <li><a href="https://kmnada.site" target="_blank" rel="noopener">kmnada.site 📸</a></li>
+            <li><a href="https://unexpected.quest" target="_blank" rel="noopener">unexpected.quest 🎒</a></li>
+            <li><a href="https://404commons.com" target="_blank" rel="noopener">the 404 commons grove 🌳</a></li>
+            <li><a href="https://anarchive.surge.sh" target="_blank" rel="noopener">anarchive.surge.sh 🏴</a></li>
+            <li><a href="https://spalmanac.surge.sh" target="_blank" rel="noopener">spalmanac.surge.sh 🌞</a></li>
+            <li><a href="https://huewave.xyz" target="_blank" rel="noopener">huewave 🌈</a></li>
+            <li><a href="https://squiddd.bearblog.dev" target="_blank" rel="noopener">squiddd 🦑</a></li>
+          </ul>
+          <h3>social</h3>
+          <ul>
+            <li><a href="https://special.fish/leaf" target="_blank" rel="noopener">special.fish/leaf 🐟</a></li>
+          </ul>
+        </div>
+      </article>
     </section>
   </main>
 
-  <!-- Statusline -->
   <footer class="statusline" aria-hidden="true">
     <div class="left"><span class="pill">kmrowe.info</span> utf-8  unix</div>
     <div class="right" id="cursorPos">Ln 1, Col 1</div>
   </footer>
 
+  <div id="cmd" class="cmd-overlay" aria-hidden="true">
+    <div class="cmd-card" role="dialog" aria-modal="true" aria-labelledby="cmdTitle" role="search">
+      <div class="cmd-title" id="cmdTitle">Search content</div>
+      <input id="cmdInput" class="cmd-input" type="search" inputmode="search"
+             placeholder="Search site… (e.g., geographer, Leaflet, pedagogy)" autocomplete="off"
+             aria-label="Search site content">
+      <ul id="cmdList" class="cmd-list" role="listbox" aria-label="Search results"></ul>
+    </div>
+  </div>
+
+  <div id="trails"></div>
+
   <script>
-    // ==== Tokens / helpers ====
-    const rows = [...document.querySelectorAll('.row')];
-    const contents = [...document.querySelectorAll('.tab-content')];
-    const bufferTitle = document.getElementById('bufferTitle');
-
-    function setActive(i){
-      if(i<0) i = rows.length-1;
-      if(i>=rows.length) i = 0;
-      rows.forEach((r,idx)=>r.classList.toggle('active', idx===i));
-      contents.forEach(c=>c.classList.remove('active'));
-      const id = rows[i].dataset.tab;
-      document.getElementById(id).classList.add('active');
-      bufferTitle.textContent = ':' + id;
-      active = i;
-    }
-
-    // Build first-letter index for shortcuts; cycle if duplicates (Profile/Projects/Philosophy)
-    const indexByLetter = {};
-    rows.forEach((r,idx)=>{
-      const letter = r.querySelector('.btn').textContent.trim().charAt(0).toLowerCase();
-      indexByLetter[letter] = (indexByLetter[letter] || []).concat(idx);
-    });
-
-    let cycleMap = {}; // letter -> which index we last used
-    let active = 0;
-    setActive(0);
-
-    // Click handling
-    rows.forEach((r,idx)=> r.querySelector('.btn').addEventListener('click', ()=>setActive(idx)));
-
-    // Keyboard: arrows, j/k, Ctrl+M, and first-letter cycling
-    window.addEventListener('keydown',(e)=>{
-      // theme
-      if(e.ctrlKey && (e.key==='m' || e.key==='M')){ e.preventDefault(); document.body.classList.toggle('light'); return; }
-      // BBS easter-egg
-      if(e.ctrlKey && e.altKey && (e.key==='b' || e.key==='B')){ e.preventDefault(); document.body.classList.toggle('bbs'); return; }
-
-      // navigation
-      if(['ArrowDown','j','J'].includes(e.key)){ e.preventDefault(); setActive(active+1); return; }
-      if(['ArrowUp','k','K'].includes(e.key)){ e.preventDefault(); setActive(active-1); return; }
-      if(e.key==='Enter'){ e.preventDefault(); setActive(active); return; }
-
-      // first-letter shortcuts
-      const ch = e.key.length===1 ? e.key.toLowerCase() : '';
-      if(ch && indexByLetter[ch]){
-        e.preventDefault();
-        const list = indexByLetter[ch];
-        const pos = (cycleMap[ch] ?? -1) + 1;
-        cycleMap[ch] = pos % list.length;
-        setActive(list[ cycleMap[ch] ]);
+    (() => {
+      'use strict';
+    
+      const rows = [...document.querySelectorAll('.row')];
+      const contents = [...document.querySelectorAll('.tab-content')];
+      const bufferTitle = document.getElementById('bufferTitle');
+      let active = 0;
+    
+      function setActive(i){
+        if(i<0) i = rows.length-1;
+        if(i>=rows.length) i = 0;
+        rows.forEach((r,idx)=>r.classList.toggle('active', idx===i));
+        contents.forEach(c=>c.classList.remove('active'));
+        const id = rows[i].dataset.tab;
+        const target = document.getElementById(id);
+        if (target) target.classList.add('active');
+        if (bufferTitle) bufferTitle.textContent = ':' + id;
+        active = i;
       }
-    });
-
-    // Statusline cursor flavor
-    document.addEventListener('mousemove', (e)=>{
-      const x = Math.max(1, Math.round((e.clientX / window.innerWidth)*80));
-      const y = Math.max(1, Math.round((e.clientY / window.innerHeight)*24));
-      document.getElementById('cursorPos').textContent = 'Ln ' + y + ', Col ' + x;
-    });
-
-    // Safe contact: Base64, assembled on click, copies to clipboard
-    const b64 = "a2V2aW4ubWF0dGhldy5yb3dlQGdtYWlsLmNvbQ==";
-    const revealBtn = document.getElementById('revealMail');
-    const mailLink = document.getElementById('mailLink');
-    const copied = document.getElementById('copied');
-
-    function decode(b){ try{ return atob(b); }catch(e){ return ''; } }
-
-    revealBtn.addEventListener('click', ()=>{
-      const addr = decode(b64);
-      mailLink.textContent = addr;
-      mailLink.href = 'mailto:' + addr + '?subject=Hello%20km.%20rowe';
-      mailLink.classList.remove('hidden');
-      revealBtn.classList.add('hidden');
-    });
-
-    mailLink.addEventListener('click', async (e)=>{
-      // copy on click (still follows link in a new tab if mail client is configured)
-      e.preventDefault();
-      try{
-        await navigator.clipboard.writeText(decode(b64));
-        copied.classList.remove('hidden');
-        setTimeout(()=>copied.classList.add('hidden'), 1200);
-        window.location.href = mailLink.href;
-      }catch(_){}
-    });
+      window.setActive = setActive;
+    
+      setActive(0);
+      rows.forEach((r,idx)=> {
+        const btn = r.querySelector('.btn');
+        if (btn) btn.addEventListener('click', ()=>setActive(idx), {passive:true});
+      });
+    
+      const indexByLetter = {};
+      rows.forEach((r,idx)=>{
+        const btn = r.querySelector('.btn');
+        if (!btn) return;
+        const letter = btn.textContent.trim().charAt(0).toLowerCase();
+        (indexByLetter[letter] ??= []).push(idx);
+      });
+      const cyclePos = {};
+    
+      const cmd = document.getElementById('cmd');
+      const cmdInput = document.getElementById('cmdInput');
+      const cmdList = document.getElementById('cmdList');
+    
+      let searchIndex = [];
+    
+      function openCmd(){
+        if (!cmd || !cmdInput) return;
+        const t = document.getElementById('cmdTitle'); if (t) t.textContent = 'Search content';
+        buildIndex();
+        cmd.style.display = 'grid';
+        cmd.setAttribute('aria-hidden','false');
+        renderCmdList('');
+        cmdInput.value = '';
+        cmdInput.focus();
+      }
+      function closeCmd(){
+        if (!cmd) return;
+        cmd.style.display = 'none';
+        cmd.setAttribute('aria-hidden','true');
+      }
+      const headshot = document.getElementById('openCmdByClick');
+      if (headshot) headshot.addEventListener('click', openCmd, {passive:true});
+    
+      const escMap = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+      function escHTML(s){ return s.replace(/[&<>"']/g, c => escMap[c]); }
+      function escRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+    
+      function clearHighlights(){
+        contents.forEach(tab => {
+          tab.querySelectorAll('mark.hit').forEach(mark => {
+            const t = document.createTextNode(mark.textContent);
+            mark.replaceWith(t);
+          });
+          tab.normalize();
+        });
+      }
+    
+      function highlightAndScroll(tabId, query){
+        if(!query) return;
+        const tab = document.getElementById(tabId);
+        if(!tab) return;
+        const re = new RegExp(escRe(query), 'ig');
+        const walker = document.createTreeWalker(tab, NodeFilter.SHOW_TEXT, null);
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(node => {
+          const val = node.nodeValue;
+          if(!re.test(val)){ re.lastIndex = 0; return; }
+          re.lastIndex = 0;
+          const frag = document.createDocumentFragment();
+          let last = 0, m;
+          while((m = re.exec(val)) !== null){
+            frag.append(document.createTextNode(val.slice(last, m.index)));
+            const mark = document.createElement('mark');
+            mark.className = 'hit';
+            mark.textContent = m[0];
+            frag.append(mark);
+            last = m.index + m[0].length;
+          }
+          frag.append(document.createTextNode(val.slice(last)));
+          node.parentNode.replaceChild(frag, node);
+        });
+        const first = tab.querySelector('mark.hit');
+        if(first) first.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'});
+      }
+    
+      function buildIndex(){
+        searchIndex = rows.map((r, idx) => {
+          const btn = r.querySelector('.btn');
+          const label = btn ? btn.textContent.trim() : ('Section ' + (idx+1));
+          const tabId = r.dataset.tab;
+          const node = document.getElementById(tabId);
+          const text = node ? node.textContent.replace(/\s+/g,' ').trim() : '';
+          return { label, idx, tabId, text };
+        });
+      }
+    
+      function fuzzyScore(text, query){
+        const a = text.toLowerCase(), b = query.toLowerCase();
+        let ti = 0, qi = 0, score = 0, streak = 0;
+        while (ti < a.length && qi < b.length){
+          if(a[ti] === b[qi]){ score += 5 + streak; streak += 2; qi++; }
+          else { score -= 1; streak = 0; }
+          ti++;
+        }
+        return (qi === b.length) ? score - (a.length - b.length) : -1;
+      }
+    
+      function getSnippets(text, query, maxSnips = 2, radius = 48){
+        const out = [];
+        if(!query) return out;
+        const lower = text.toLowerCase();
+        const q = query.toLowerCase();
+        let pos = 0;
+        while (out.length < maxSnips) {
+          const hit = lower.indexOf(q, pos);
+          if (hit === -1) break;
+          const start = Math.max(0, hit - radius);
+          const end   = Math.min(text.length, hit + q.length + radius);
+          let sn = text.slice(start, end);
+          if(start > 0) sn = '…' + sn;
+          if(end < text.length) sn = sn + '…';
+          out.push(sn);
+          pos = hit + q.length;
+        }
+        return out;
+      }
+    
+      function renderCmdList(q){
+        if(!cmdList) return;
+        while (cmdList.firstChild) cmdList.removeChild(cmdList.firstChild);
+    
+        if(!q){
+          searchIndex.forEach((x,i)=>{
+            const li = document.createElement('li');
+            li.className = 'cmd-item' + (i===0?' selected':'');
+            li.dataset.idx = String(x.idx);
+            li.dataset.tab = x.tabId;
+            const lab = document.createElement('span');
+            lab.className = 'cmd-label';
+            lab.textContent = x.label;
+            li.append(lab);
+            cmdList.append(li);
+          });
+          return;
+        }
+    
+        const filtered = searchIndex
+          .map(x => {
+            const bodyHas = x.text.toLowerCase().includes(q.toLowerCase());
+            if(!bodyHas) return null;
+            const sTitle = fuzzyScore(x.label, q);
+            const sBody  = fuzzyScore(x.text, q) * 0.35;
+            const score  = Math.max(sTitle, sBody);
+            const snips  = getSnippets(x.text, q, 2);
+            return {...x, score, snips};
+          })
+          .filter(Boolean)
+          .sort((a,b)=> b.score - a.score)
+          .slice(0, 24);
+    
+        if(filtered.length === 0){
+          const li = document.createElement('li');
+          li.textContent = 'No matches';
+          li.className = 'cmd-empty';
+          cmdList.append(li);
+          return;
+        }
+    
+        const reInline = new RegExp(escRe(q), 'ig');
+        filtered.forEach((x,i)=>{
+          const li = document.createElement('li');
+          li.className = 'cmd-item' + (i===0?' selected':'');
+          li.dataset.idx = String(x.idx);
+          li.dataset.tab = x.tabId;
+    
+          const lab = document.createElement('span');
+          lab.className = 'cmd-label';
+          lab.textContent = x.label;
+          li.append(lab);
+    
+          x.snips.forEach(sn => {
+            const span = document.createElement('span');
+            span.className = 'cmd-snippet';
+            span.innerHTML = escHTML(sn).replace(reInline, m => `<mark class="hit-inline">${escHTML(m)}</mark>`);
+            li.append(span);
+          });
+    
+          cmdList.append(li);
+        });
+      }
+    
+      if (cmdInput) cmdInput.addEventListener('input', (e)=> renderCmdList(e.target.value));
+      if (cmdInput) cmdInput.addEventListener('keydown', (e)=>{
+        const items = [...cmdList.querySelectorAll('.cmd-item')];
+        if(items.length === 0) return;
+        let sel = items.findIndex(el => el.classList.contains('selected'));
+        if(sel < 0) sel = 0;
+    
+        if(e.key === 'ArrowDown'){ e.preventDefault(); items[sel].classList.remove('selected'); sel = (sel+1)%items.length; items[sel].classList.add('selected'); return; }
+        if(e.key === 'ArrowUp'){ e.preventDefault(); items[sel].classList.remove('selected'); sel = (sel-1+items.length)%items.length; items[sel].classList.add('selected'); return; }
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          const t = items[sel];
+          const idx = Number.parseInt(t.dataset.idx,10);
+          const tabId = t.dataset.tab || '';
+          if(Number.isFinite(idx) && tabId){
+            setActive(idx);
+            closeCmd();
+            clearHighlights();
+            highlightAndScroll(tabId, cmdInput.value.trim());
+          }
+        }
+      });
+    
+      if (cmdList) cmdList.addEventListener('click',(e)=>{
+        const li = e.target.closest('.cmd-item'); if(!li) return;
+        const idx = Number.parseInt(li.dataset.idx,10);
+        const tabId = li.dataset.tab || '';
+        if(Number.isFinite(idx) && tabId){
+          setActive(idx);
+          closeCmd();
+          clearHighlights();
+          highlightAndScroll(tabId, cmdInput.value.trim());
+        }
+      });
+    
+      window.addEventListener('keydown', (e)=>{
+        const tag = (e.target.tagName || '').toLowerCase();
+        if(tag === 'input' || tag === 'textarea' || e.target.isContentEditable){
+          if(e.key==='Escape'){ e.preventDefault(); closeCmd(); }
+          return;
+        }
+        if(e.ctrlKey && (e.key==='t' || e.key==='T')){ e.preventDefault(); document.body.classList.toggle('light'); return; }
+        if(e.key==='Escape' || (e.ctrlKey && (e.key==='c' || e.key==='C'))){ e.preventDefault(); openCmd(); return; }
+        if(['ArrowDown','j','J'].includes(e.key)){ e.preventDefault(); setActive(active+1); return; }
+        if(['ArrowUp','k','K'].includes(e.key)){ e.preventDefault(); setActive(active-1); return; }
+        if(e.key==='Enter'){ e.preventDefault(); setActive(active); return; }
+        if(e.key && e.key.length===1){
+          const letter = e.key.toLowerCase();
+          if(indexByLetter[letter]){
+            e.preventDefault();
+            const list = indexByLetter[letter];
+            const next = ((cyclePos[letter] ?? -1) + 1) % list.length;
+            cyclePos[letter] = next;
+            setActive(list[next]);
+          }
+        }
+      }, {passive:false});
+    
+      document.addEventListener('mousemove', (e)=>{
+        const x = Math.max(1, Math.round((e.clientX / window.innerWidth)*80));
+        const y = Math.max(1, Math.round((e.clientY / window.innerHeight)*24));
+        const c = document.getElementById('cursorPos');
+        if (c) c.textContent = 'Ln ' + y + ', Col ' + x;
+      }, {passive:true});
+    
+      const b64 = "a2V2aW4ubWF0dGhldy5yb3dlQGdtYWlsLmNvbQ==";
+      const revealBtn = document.getElementById('revealMail');
+      const mailLink = document.getElementById('mailLink');
+      const copied = document.getElementById('copied');
+      function decode(b){ try{ return atob(b); }catch{ return ''; } }
+    
+      if (revealBtn) revealBtn.addEventListener('click', ()=>{
+        const addr = decode(b64);
+        if (mailLink){
+          mailLink.textContent = addr;
+          mailLink.href = 'mailto:' + addr + '?subject=Hello%20km.%20rowe';
+          mailLink.classList.remove('hidden');
+        }
+        revealBtn.classList.add('hidden');
+      });
+    
+      if (mailLink) mailLink.addEventListener('click', async (e)=>{
+        e.preventDefault();
+        try{
+          await navigator.clipboard.writeText(decode(b64));
+          if (copied){
+            copied.classList.remove('hidden');
+            setTimeout(()=>copied.classList.add('hidden'), 1200);
+          }
+          window.location.href = mailLink.href;
+        }catch(_){
+          window.location.href = mailLink.href;
+        }
+      });
+    
+      const trails = document.getElementById('trails');
+      if (trails){
+        const N = 12;
+        const nodes = [];
+        for(let i=0;i<N;i++){
+          const d = document.createElement('div');
+          d.className = 'caret-trail';
+          trails.appendChild(d);
+          nodes.push({el:d, x:0, y:0});
+        }
+        let mx=0,my=0;
+        window.addEventListener('mousemove',(e)=>{ mx=e.clientX; my=e.clientY; }, {passive:true});
+        (function animate(){
+          nodes.forEach((n,i)=>{
+            const prev = i===0 ? {x:mx,y:my} : nodes[i-1];
+            const k = 0.22 - i*0.012;
+            n.x += (prev.x - n.x) * k;
+            n.y += (prev.y - n.y) * k;
+            const s = 12 - i*0.6;
+            n.el.style.transform = `translate(${n.x}px,${n.y}px)`;
+            n.el.style.height = `${s}px`;
+            n.el.style.opacity = String(Math.max(0, 0.9 - i*0.07));
+          });
+          requestAnimationFrame(animate);
+        })();
+      }
+    })();
   </script>
 </body>
-</html>
 </html>
