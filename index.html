@@ -1,399 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>km. rowe – Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏴%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css" />
+  <!-- 👾 emoji favicon -->
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%91%BE%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="dark-toggle" title="Toggle dark mode" id="darkToggle"></div>
+  <!-- Bufferline (updates to :{section}) -->
+  <header class="bufferline" role="navigation" aria-label="bufferline">
+    <div id="bufferTitle">:about</div>
+    <div class="hint">Ctrl+M: theme · Ctrl+Alt+B: BBS</div>
+  </header>
 
-  <div class="container">
-    <div class="profile-header">
-      <img src="headshot.png" alt="Kevin M. Rowe" class="headshot" onclick="launchIndex()" />
-      <div class="intro">
-        <h1>kevin m. rowe</h1>
-        <p>Geographer, educator, systems thinker, artist, poet</p>
+  <main class="nvim-layout centered">
+    <!-- Left rail: headshot + ANSI logo -->
+    <aside class="left-rail">
+      <img src="headshot.png" alt="Kevin M. Rowe" class="headshot-left">
+      <pre class="ansi-logo" aria-label="km. rowe (ansi)">
+<span class="c1"> _  __  __        ___                   </span>
+<span class="c2">| |/ / / _| ___  | _ \ _ __  ___ __ _  _</span>
+<span class="c3">| ' <  |  _|/ -_) |   /| '_ \/ -_) _| || |</span>
+<span class="c4">|_|\_\ |_|  \___| |_|_\| .__/\___\__|\_, |</span>
+<span class="c5">                         |_|            | |</span>
+<span class="c6"> km. rowe — geographer · educator · systems thinker</span>
+<span class="c2">           artist · photographer · poet</span>
+      </pre>
+    </aside>
+
+    <!-- Center: NVIM-style floating window -->
+    <section class="center-pane">
+      <div class="titlebar">
+        <div class="mode" id="modeLabel">NORMAL</div>
       </div>
-    </div>
 
-    <div class="tabs">
-      <div class="tab active" data-tab="about">🧭 About</div>
-      <div class="tab" data-tab="profile">🧰 Profile</div>
-      <div class="tab" data-tab="projects">🧪 Projects</div>
-      <div class="tab" data-tab="education">🎓 Education</div>
-      <div class="tab" data-tab="media">🖋️ Media</div>
-      <div class="tab" data-tab="philosophy">📜 Philosophy</div>
-      <div class="tab" data-tab="links">🌐 Links</div>
-    </div>
+      <div class="menu-window">
+        <!-- Menu list -->
+        <ul id="menuList" class="menu-grid" role="listbox" aria-label="Main">
+          <li class="row active" data-tab="about"><span class="k">a</span><button class="btn">About</button><span class="k">Enter</span></li>
+          <li class="row" data-tab="profile"><span class="k">p</span><button class="btn">Profile</button><span class="k"></span></li>
+          <li class="row" data-tab="projects"><span class="k">p</span><button class="btn">Projects</button><span class="k"></span></li>
+          <li class="row" data-tab="education"><span class="k">e</span><button class="btn">Education</button><span class="k"></span></li>
+          <li class="row" data-tab="media"><span class="k">m</span><button class="btn">Media</button><span class="k"></span></li>
+          <li class="row" data-tab="philosophy"><span class="k">p</span><button class="btn">Philosophy</button><span class="k"></span></li>
+          <li class="row" data-tab="links"><span class="k">l</span><button class="btn">Links</button><span class="k"></span></li>
+        </ul>
 
-    <div class="tab-content active" id="about">
-      <p>km. rowe is a geographer, educator, and multidisciplinary artist based in Xalapa, Mexico. Embracing the principle of <em>festina lente</em> (make haste slowly), km. integrates diligence, balance, and tranquility into his work. He identifies as an anarchist, eschewing hierarchical structures in favor of collaborative and decentralized approaches to life and work.</p>
-    </div>
+        <!-- Content (from your original index.html) -->
+        <article class="content">
+          <div class="tab-content active" id="about">
+            <h1>kevin m. rowe</h1>
+            <p>Geographer, educator, systems thinker, artist, poet</p>
+            <p>km. rowe is a geographer, educator, and multidisciplinary artist based in Xalapa, Mexico. Embracing the principle of <em>festina lente</em> (make haste slowly), km. integrates diligence, balance, and tranquility into his work. He identifies as an anarchist, eschewing hierarchical structures in favor of collaborative and decentralized approaches to life and work.</p>
 
-    <div class="tab-content" id="profile">
-      <ul>
-        <li><strong>Geography & Mapping</strong> GIS, spatial analysis, Leaflet.js, PostGIS</li>
-        <li><strong>Education & Leadership</strong> Curriculum design, team coordination, inclusive + radical pedagogy</li>
-        <li><strong>Creative Technologies</strong> HTML, CSS, JavaScript, Letterpress, Mimeography, Paper, Scissors</li>
-        <li><strong>Workflow Optimization</strong> Slack, VScode, Neovim, CLI</li>
-      </ul>
-    </div>
+            <!-- Bot-safe contact (click to reveal or copy) -->
+            <div class="contact">
+              <button id="revealMail" class="shield">Reveal email</button>
+              <a id="mailLink" class="mail hidden" href="#" rel="nofollow noopener">email</a>
+              <span id="copied" class="copied hidden">copied</span>
+            </div>
+          </div>
 
-    <div class="tab-content" id="projects">
-      <ul>
-        <li><strong>Leaflet-WP</strong> WordPress plugin for interactive mapping and storytelling</li>
-        <li><strong>minmem</strong> Minimalist journaling app with mood tagging and privacy-first design</li>
-        <li><strong>Digital Chapbooks</strong> Poetry meets HTML + interface design with ASCII covers and scrolling stanzas</li>
-        <li><strong>invisible city press</strong> Printing and distribution of poetic material</li>
-        <li><strong>Taller Cero</strong> Lo-fi print studio utilising letterpress and mimeography</li>
-        <li><strong>antigallery</strong> Pop-up arts events + errant wayfaring gallery imagining an artistic ecology without capitalists</li>
-        <li><strong>Workshops</strong> Collaborative learning, radical pedagogy, and community building</li>
-        <li><strong>the anarchive</strong> Carefully curated anarchist starter pack + link hive</li>
-        <li><strong>The 404 Commons</strong> A BBS-inspired, decentrailised web architecture for drift-based publishing, where pages are seeds, and discovery replaces the feed</li>
-        <li><strong>The Solarpunk Almanac</strong> A digital almanac taking inspirations from the solarpunk movement</li>
-        <li><strong>Huewave</strong> A language-free blog and moodboard based on colour and sound</li>
-        <li><strong>squiddd</strong> A playful, interpretive blog exploring water-based themes in envioronmentalism</li>
-      </ul>
-    </div>
+          <div class="tab-content" id="profile">
+            <ul>
+              <li><strong>Geography &amp; Mapping</strong> GIS, spatial analysis, Leaflet.js, PostGIS</li>
+              <li><strong>Education &amp; Leadership</strong> Curriculum design, team coordination, inclusive + radical pedagogy</li>
+              <li><strong>Creative Technologies</strong> HTML, CSS, JavaScript, Letterpress, Mimeography, Paper, Scissors</li>
+              <li><strong>Workflow Optimization</strong> Slack, VScode, Neovim, CLI</li>
+            </ul>
+          </div>
 
-    <div class="tab-content" id="education">
-      <ul>
-        <li><strong>BSc in Geography</strong> Focus on human-environment interactions and spatial justice</li>
-        <li><strong>MEd in Education</strong> Focus on self-directed learning, unschooling, and deschooling</li>
-        <li><strong>Ongoing Learning</strong> Anarchist pedagogy, open-source tools, experimental artistic practices</li>
-      </ul>
-    </div>
+          <div class="tab-content" id="projects">
+            <ul>
+              <li><strong>Leaflet-WP</strong> WordPress plugin for interactive mapping and storytelling</li>
+              <li><strong>minmem</strong> Minimalist journaling app with mood tagging and privacy-first design</li>
+              <li><strong>Digital Chapbooks</strong> Poetry meets HTML + interface design with ASCII covers and scrolling stanzas</li>
+              <li><strong>invisible city press</strong> Printing and distribution of poetic material</li>
+              <li><strong>Taller Cero</strong> Lo-fi print studio utilising letterpress and mimeography</li>
+              <li><strong>antigallery</strong> Pop-up arts events + errant wayfaring gallery imagining an artistic ecology without capitalists</li>
+              <li><strong>Workshops</strong> Collaborative learning, radical pedagogy, and community building</li>
+              <li><strong>the anarchive</strong> Carefully curated anarchist starter pack + link hive</li>
+              <li><strong>The 404 Commons</strong> A BBS-inspired, decentrailised web architecture for drift-based publishing, where pages are seeds, and discovery replaces the feed</li>
+              <li><strong>The Solarpunk Almanac</strong> A digital almanac taking inspirations from the solarpunk movement</li>
+              <li><strong>Huewave</strong> A language-free blog and moodboard based on colour and sound</li>
+              <li><strong>squiddd</strong> A playful, interpretive blog exploring water-based themes in envioronmentalism</li>
+            </ul>
+          </div>
 
-    <div class="tab-content" id="media">
-      <ul>
-        <li><strong>Poetry, Essays, and Writing</strong> Themes of place, identity, community, and resistance</li>
-        <li><strong>Photography</strong> Urban landscape and everyday moments</li>
-        <li><strong>Art</strong> Experimental liberation through collage and letterpress</li>
-        <li><strong>Digital</strong> Interactive tools, publishing systems, and poetic software artifacts</li>
-      </ul>
-    </div>
+          <div class="tab-content" id="education">
+            <ul>
+              <li><strong>BSc in Geography</strong> Focus on human-environment interactions and spatial justice</li>
+              <li><strong>MEd in Education</strong> Focus on self-directed learning, unschooling, and deschooling</li>
+              <li><strong>Ongoing Learning</strong> Anarchist pedagogy, open-source tools, experimental artistic practices</li>
+            </ul>
+          </div>
 
-    <div class="tab-content" id="links">
-      <ul>
-        <li><a href="https://kmrowe.me" target="_blank" rel="noopener">kmrowe.me ✍🏽📚</a></li>
-        <li><a href="https://kmnada.mmm.page" target="_blank" rel="noopener">kmnada.mmm.page 📷+🖼️ [old]</a></li>
-        <li><a href="https://kmnada.page" target="_blank" rel="noopener">kmnada.page 📷+🖼️ [new]</a></li>
-        <li><a href="https://robotameri.ca" target="_blank" rel="noopener">robotameri.ca 🤖📓</a></li>
-        <li><a href="https://kmnada.site" target="_blank" rel="noopener">kmnada.site 📸</a></li>
-        <li><a href="https://unexpected.quest" target="_blank" rel="noopener">unexpected.quest 🎒</a></li>
-        <li><a href="https://404commons.com" target="_blank" rel="noopener">the 404 commons grove 🌳</a></li>
-        <li><a href="https://anarchive.surge.sh" target="_blank" rel="noopener">anarchive.surge.sh 🏴</a></li>
-        <li><a href="https://spalmanac.surge.sh" target="_blank" rel="noopener">spalmanac.surge.sh 🌞</a></li>
-        <li><a href="https://huewave.xyz" target="_blank" rel="noopener">huewave 🌈</a></li>
-        <li><a href="https://squiddd.bearblog.dev" target="_blank" rel="noopener">squiddd 🦑</a></li> 
-      </ul>
-      <h3>social</h3>
-      <ul>
-        <li><a href="https://special.fish/leaf" target="_blank" rel="noopener">special.fish/leaf 🐟</a></li>
-      </ul>
-    </div>
+          <div class="tab-content" id="media">
+            <ul>
+              <li><strong>Poetry, Essays, and Writing</strong> Themes of place, identity, community, and resistance</li>
+              <li><strong>Photography</strong> Urban landscape and everyday moments</li>
+              <li><strong>Art</strong> Experimental liberation through collage and letterpress</li>
+              <li><strong>Digital</strong> Interactive tools, publishing systems, and poetic software artifacts</li>
+            </ul>
+          </div>
 
-    <div class="tab-content" id="philosophy">
-      <p>I move fluidly between roles: poet-technologist, workflow artist, and digital cartographer. These aren’t really job titles, they’re ways i work: poetic, precise, and always grounded in systems of care.</p>
-      <p>I create simple tools that empower. I believe in flexibility over rigidity, tools as multi-use instruments, and design as a form of care. My current influences include poets like bpNichol and Gertrude Stein, coders like Fred George, and thinkers like Félix Guattari and bell hooks.</p>
-    </div>
-  </div>
+          <div class="tab-content" id="philosophy">
+            <p>I move fluidly between roles: poet-technologist, workflow artist, and digital cartographer. These aren’t really job titles, they’re ways i work: poetic, precise, and always grounded in systems of care.</p>
+            <p>I create simple tools that empower. I believe in flexibility over rigidity, tools as multi-use instruments, and design as a form of care. My current influences include poets like bpNichol and Gertrude Stein, coders like Fred George, and thinkers like Félix Guattari and bell hooks.</p>
+          </div>
 
-  <div class="terminal" id="indexTerminal">
-    <div class="terminal-close" onclick="launchIndex()">×</div>
-    <pre id="terminalOutput">:: INDEX — type 'help', 'ls', 'open [section]', or 'exit'</pre>
-    <div class="terminal-input-line">
-      <span class="terminal-prompt">&gt;</span>
-      <input type="text" id="terminalInput" placeholder="e.g. open profile" onkeydown="handleIndex(event)" />
-    </div>
-  </div>
+          <div class="tab-content" id="links">
+            <ul>
+              <li><a href="https://kmrowe.me" target="_blank" rel="noopener">kmrowe.me ✍🏽📚</a></li>
+              <li><a href="https://kmnada.mmm.page" target="_blank" rel="noopener">kmnada.mmm.page 📷+🖼️ [old]</a></li>
+              <li><a href="https://kmnada.page" target="_blank" rel="noopener">kmnada.page 📷+🖼️ [new]</a></li>
+              <li><a href="https://robotameri.ca" target="_blank" rel="noopener">robotameri.ca 🤖📓</a></li>
+              <li><a href="https://kmnada.site" target="_blank" rel="noopener">kmnada.site 📸</a></li>
+              <li><a href="https://unexpected.quest" target="_blank" rel="noopener">unexpected.quest 🎒</a></li>
+              <li><a href="https://404commons.com" target="_blank" rel="noopener">the 404 commons grove 🌳</a></li>
+              <li><a href="https://anarchive.surge.sh" target="_blank" rel="noopener">anarchive.surge.sh 🏴</a></li>
+              <li><a href="https://spalmanac.surge.sh" target="_blank" rel="noopener">spalmanac.surge.sh 🌞</a></li>
+              <li><a href="https://huewave.xyz" target="_blank" rel="noopener">huewave 🌈</a></li>
+              <li><a href="https://squiddd.bearblog.dev" target="_blank" rel="noopener">squiddd 🦑</a></li>
+            </ul>
+            <h3>social</h3>
+            <ul>
+              <li><a href="https://special.fish/leaf" target="_blank" rel="noopener">special.fish/leaf 🐟</a></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
 
-  <!-- No redirect script — GitHub Pages handles canonicalization/HTTPS -->
-
-  <script>
-    // Tabs
-    const tabs = document.querySelectorAll(".tab");
-    const contents = document.querySelectorAll(".tab-content");
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        contents.forEach(c => c.classList.remove("active"));
-        tab.classList.add("active");
-        document.getElementById(tab.dataset.tab).classList.add("active");
-      });
-    });
-
-    // Dark mode toggle
-    document.getElementById("darkToggle").addEventListener("click", () => {
-      document.body.classList.toggle("dark-mode");
-    });
-
-    // Terminal launcher
-    function launchIndex() {
-      const terminal = document.getElementById("indexTerminal");
-      const toggle = document.getElementById("darkToggle");
-      const isOpen = terminal.style.display === "block";
-      terminal.style.display = isOpen ? "none" : "block";
-      toggle.classList.toggle("hidden", !isOpen);
-    }
-
-    // Terminal input handler
-    function handleIndex(e) {
-      if (e.key === "Enter") {
-        const input = e.target.value.trim().toLowerCase();
-        const output = document.getElementById("terminalOutput");
-        let response = "";
-
-        if (input === "help") {
-          response =
-`Available commands:
-  ls             - list sections
-  open [section] - display section content
-  run snake      - launch poetic snake game
-  exit           - close terminal`;
-        } else if (input === "ls") {
-          response = "about/ profile/ projects/ education/ media/ philosophy/ links/";
-        } else if (input.startsWith("open ")) {
-          const entry = input.split(" ")[1];
-          switch (entry) {
-            case "about":
-              response = `km. rowe is a geographer, educator, and multidisciplinary artist based in Xalapa, Mexico. Embracing the principle of *festina lente* (make haste slowly), km. integrates diligence, balance, and tranquility into his work. He identifies as an anarchist, eschewing hierarchical structures in favor of collaborative and decentralized approaches to life and work.`;
-              break;
-            case "profile":
-              response = `Geography & Mapping: GIS, spatial analysis, Leaflet.js, PostGIS
-Education & Leadership: Curriculum design, team coordination, inclusive + radical pedagogy
-Creative Technologies: HTML, CSS, JavaScript, Letterpress, Mimeography, Paper, Scissors
-Workflow Optimization: Slack, VScode, Neovim, CLI`;
-              break;
-            case "projects":
-              response = `Leaflet-WP: WordPress plugin for interactive mapping and storytelling
-minmem: A minimalist journaling app with mood tagging and privacy-first design
-Digital Chapbooks: Poetry meets interface design with ASCII covers and scrolling stanzas
-invisible city press: Printing and distribution of poetic material
-Taller Cero: Lo-fi print studio utilising letterpress and mimeography
-antigallery: Pop-up arts events imagining an artistic ecology without capitalists
-Workshops: Collaborative learning, radical pedagogy, and community building
-the anarchive: Carefully curated anarchist starter pack + link hive
-The 404 Commons: A BBS-inspired, decentrailised web architecture for drift-based publishing, where pages are seeds, and discovery replaces the feed
-Solarpunk Almanac: A digital almanac taking inspirations from the solarpunk movement
-Huewave: A language-free blog and moodboard based on colour and sound
-squiddd: A playful, interpretive blog exploring water-based themes in envioronmentalism`;
-              break;
-            case "education":
-              response = `BSc in Geography: Focus on human-environment interactions and spatial justice
-MEd in Education: Focus on self-directed learning, unschooling, and deschooling
-Ongoing Learning: Anarchist pedagogy, open-source tools, experimental art practices`;
-              break;
-            case "media":
-              response = `Poetry & Essays: Themes of place, identity, resistance
-Photography: Urban landscape and everyday moments
-Art: Experimental liberation through collage and letterpress
-Digital: Interactive tools, publishing systems, and poetic software artifacts`;
-              break;
-            case "philosophy":
-              response = `I move fluidly between roles: poet-technologist, workflow artist, and digital cartographer. These aren’t job titles, they’re the ways i work: poetic, precise, and always grounded in systems of care.
-I create tools that empower. I believe in flexibility over rigidity, tools as multi-use instruments, and design as a form of care. My current influences include poets like bpNichol and Gertrude Stein, coders like Fred George, and thinkers like Félix Guattari and bell hooks.`;
-              break;
-            case "links":
-              response =
-`kmrowe.me ✍🏽
-kmnada.mmm.page 📷+🖼️ [old]
-kmnada.page 📷+🖼️ [new]
-robotameri.ca 🎒
-kmnada.site 📸
-unexpected.quest 🎒
-404commons.com 🌳
-anarchive.surge.sh 🏴
-spalmanac.surge.sh 🌞
-huewave.xyz 🌈
-squiddd.bearblog.dev 🦑
-
-social
-https://special.fish/leaf 🐟`;
-              break;
-            default:
-              response = `Cannot open ${entry}: No such file or entry`;
-          }
-        } else if (input === "run snake") {
-          launchSnake();
-          response = "Launching poetic Snake... press Ctrl+C or click × to exit.";
-        } else if (input === "exit") {
-          document.getElementById("indexTerminal").style.display = "none";
-          response = ":: session closed";
-        } else {
-          response = "Unknown command. Type 'help' to list available commands.";
-        }
-
-        output.textContent += `\n> ${input}\n${response}\n`;
-        e.target.value = "";
-        output.scrollTop = output.scrollHeight;
-      }
-    }
-  </script>
-
-  <!-- Snake Game Overlay -->
-  <div id="snakeGame" class="snake-game" style="display: none;">
-    <div class="snake-close" onclick="exitSnake()">×</div>
-    <canvas id="snakeCanvas"></canvas>
-    <div id="quit-msg">Press Ctrl+C to quit</div>
-  </div>
+  <!-- Statusline -->
+  <footer class="statusline" aria-hidden="true">
+    <div class="left"><span class="pill">kmrowe.info</span> utf-8  unix</div>
+    <div class="right" id="cursorPos">Ln 1, Col 1</div>
+  </footer>
 
   <script>
-    const canvas = document.getElementById("snakeCanvas");
-    const ctx = canvas.getContext("2d");
-    const gridSize = 20;
+    // ==== Tokens / helpers ====
+    const rows = [...document.querySelectorAll('.row')];
+    const contents = [...document.querySelectorAll('.tab-content')];
+    const bufferTitle = document.getElementById('bufferTitle');
 
-    canvas.width = Math.floor(Math.min(window.innerWidth * 0.9, 800));
-    canvas.height = Math.floor(Math.min(window.innerHeight * 0.8, 600));
-
-    let cols = Math.floor(canvas.width / gridSize);
-    let rows = Math.floor(canvas.height / gridSize);
-
-    let snake = [{x: 5, y: 5}];
-    let dir = {x: 0, y: 0};
-    let running = false;
-    let started = false;
-
-    const poemLines = [
-      "Lord, who createdst man in wealth and store,",
-      "   Though foolishly he lost the same,",
-      "      Decaying more and more,",
-      "        Till he became",
-      "           Most poore:",
-      "           With  thee",
-      "        Oh let me rise",
-      "   As larks, harmoniously,",
-      "  And sing this day  thy victories:",
-      "Then shall the fall further the flight in me.",
-      "",
-      "My  tender  age  in  sorrow   did   beginne:",
-      "   And still with sicknesses and shame",
-      "      Thou  didst  so  punish  sinne,",
-      "         That  I  became",
-      "           Most thinne.",
-      "           With  thee",
-      "        Let me combine",
-      "      And feel this day thy victorie:",
-      "   For,  if  I  imp  my  wing  on  thine",
-      "Affliction shall  advance the  flight in  me."
-    ];
-
-    let foodCoords = [];
-    function generateFood() {
-      foodCoords = [];
-      poemLines.forEach((line, row) => {
-        if (row >= rows) return;
-        for (let col = 0; col < line.length; col++) {
-          const char = line[col];
-          if (char !== ' ' && char !== '' && col < cols) {
-            foodCoords.push({x: col, y: row, char});
-          }
-        }
-      });
+    function setActive(i){
+      if(i<0) i = rows.length-1;
+      if(i>=rows.length) i = 0;
+      rows.forEach((r,idx)=>r.classList.toggle('active', idx===i));
+      contents.forEach(c=>c.classList.remove('active'));
+      const id = rows[i].dataset.tab;
+      document.getElementById(id).classList.add('active');
+      bufferTitle.textContent = ':' + id;
+      active = i;
     }
 
-    function drawTile(x, y, color, char = '') {
-      ctx.fillStyle = color;
-      ctx.fillRect(x * gridSize, y * gridSize, gridSize, gridSize);
-      if (char) {
-        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-color');
-        ctx.font = "12px monospace";
-        ctx.fillText(char, x * gridSize + 4, y * gridSize + 14);
-      }
-    }
-
-    function drawSnakeGame() {
-      ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-color');
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      snake.forEach(s => drawTile(s.x, s.y, getComputedStyle(document.body).getPropertyValue('--text-color')));
-      foodCoords.forEach(f => drawTile(f.x, f.y, "#c71585", f.char));
-    }
-
-    function updateSnakeGame() {
-      if (!running || !started) return;
-
-      const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-      if (head.x < 0 || head.y < 0 || head.x >= cols || head.y >= rows || snake.some(s => s.x === head.x && s.y === head.y)) {
-        running = false;
-        alert("Game over. Refresh the page or type 'run snake' to try again.");
-        return;
-      }
-
-      snake.unshift(head);
-
-      let ate = false;
-      for (let i = 0; i < foodCoords.length; i++) {
-        if (foodCoords[i].x === head.x && foodCoords[i].y === head.y) {
-          foodCoords.splice(i, 1);
-          ate = true;
-          break;
-        }
-      }
-
-      if (!ate) snake.pop();
-      drawSnakeGame();
-
-      if (foodCoords.length === 0) {
-        alert("You consumed the poem! ✨");
-        running = false;
-      }
-    }
-
-    setInterval(updateSnakeGame, 150);
-
-    // Register touch handler ONCE (was previously inside keydown)
-    canvas.addEventListener("touchstart", function(e) {
-      if (!snake.length) return;
-      const rect = canvas.getBoundingClientRect();
-      const touch = e.touches[0];
-      const touchX = touch.clientX - rect.left;
-      const touchY = touch.clientY - rect.top;
-      const headX = snake[0].x * gridSize + gridSize / 2;
-      const headY = snake[0].y * gridSize + gridSize / 2;
-      const dx = touchX - headX;
-      const dy = touchY - headY;
-
-      if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 0 && dir.x !== -1) dir = {x: 1, y: 0};
-        else if (dx < 0 && dir.x !== 1) dir = {x: -1, y: 0};
-      } else {
-        if (dy > 0 && dir.y !== -1) dir = {x: 0, y: 1};
-        else if (dy < 0 && dir.y !== 1) dir = {x: 0, y: -1};
-      }
-      started = true;
+    // Build first-letter index for shortcuts; cycle if duplicates (Profile/Projects/Philosophy)
+    const indexByLetter = {};
+    rows.forEach((r,idx)=>{
+      const letter = r.querySelector('.btn').textContent.trim().charAt(0).toLowerCase();
+      indexByLetter[letter] = (indexByLetter[letter] || []).concat(idx);
     });
 
-    window.addEventListener("keydown", function(e) {
-      if (e.ctrlKey && e.key === 'c') { running = false; exitSnake(); return; }
-      switch (e.key) {
-        case "ArrowUp":    if (dir.y === 0) { dir = {x: 0, y: -1}; started = true; } break;
-        case "ArrowDown":  if (dir.y === 0) { dir = {x: 0, y:  1}; started = true; } break;
-        case "ArrowLeft":  if (dir.x === 0) { dir = {x:-1, y:  0}; started = true; } break;
-        case "ArrowRight": if (dir.x === 0) { dir = {x: 1, y:  0}; started = true; } break;
+    let cycleMap = {}; // letter -> which index we last used
+    let active = 0;
+    setActive(0);
+
+    // Click handling
+    rows.forEach((r,idx)=> r.querySelector('.btn').addEventListener('click', ()=>setActive(idx)));
+
+    // Keyboard: arrows, j/k, Ctrl+M, and first-letter cycling
+    window.addEventListener('keydown',(e)=>{
+      // theme
+      if(e.ctrlKey && (e.key==='m' || e.key==='M')){ e.preventDefault(); document.body.classList.toggle('light'); return; }
+      // BBS easter-egg
+      if(e.ctrlKey && e.altKey && (e.key==='b' || e.key==='B')){ e.preventDefault(); document.body.classList.toggle('bbs'); return; }
+
+      // navigation
+      if(['ArrowDown','j','J'].includes(e.key)){ e.preventDefault(); setActive(active+1); return; }
+      if(['ArrowUp','k','K'].includes(e.key)){ e.preventDefault(); setActive(active-1); return; }
+      if(e.key==='Enter'){ e.preventDefault(); setActive(active); return; }
+
+      // first-letter shortcuts
+      const ch = e.key.length===1 ? e.key.toLowerCase() : '';
+      if(ch && indexByLetter[ch]){
+        e.preventDefault();
+        const list = indexByLetter[ch];
+        const pos = (cycleMap[ch] ?? -1) + 1;
+        cycleMap[ch] = pos % list.length;
+        setActive(list[ cycleMap[ch] ]);
       }
     });
 
-    function launchSnake() {
-      document.getElementById("snakeGame").style.display = "flex";
-      canvas.width = Math.floor(Math.min(window.innerWidth * 0.9, 800));
-      canvas.height = Math.floor(Math.min(window.innerHeight * 0.8, 600));
-      cols = Math.floor(canvas.width / gridSize);
-      rows = Math.floor(canvas.height / gridSize);
-      snake = [{x: 5, y: 5}];
-      dir = {x: 0, y: 0};
-      started = false;
-      running = true;
-      generateFood();
-      drawSnakeGame();
-    }
+    // Statusline cursor flavor
+    document.addEventListener('mousemove', (e)=>{
+      const x = Math.max(1, Math.round((e.clientX / window.innerWidth)*80));
+      const y = Math.max(1, Math.round((e.clientY / window.innerHeight)*24));
+      document.getElementById('cursorPos').textContent = 'Ln ' + y + ', Col ' + x;
+    });
 
-    function exitSnake() {
-      document.getElementById("snakeGame").style.display = "none";
-    }
+    // Safe contact: Base64, assembled on click, copies to clipboard
+    const b64 = "a2V2aW4ubWF0dGhldy5yb3dlQGdtYWlsLmNvbQ==";
+    const revealBtn = document.getElementById('revealMail');
+    const mailLink = document.getElementById('mailLink');
+    const copied = document.getElementById('copied');
+
+    function decode(b){ try{ return atob(b); }catch(e){ return ''; } }
+
+    revealBtn.addEventListener('click', ()=>{
+      const addr = decode(b64);
+      mailLink.textContent = addr;
+      mailLink.href = 'mailto:' + addr + '?subject=Hello%20km.%20rowe';
+      mailLink.classList.remove('hidden');
+      revealBtn.classList.add('hidden');
+    });
+
+    mailLink.addEventListener('click', async (e)=>{
+      // copy on click (still follows link in a new tab if mail client is configured)
+      e.preventDefault();
+      try{
+        await navigator.clipboard.writeText(decode(b64));
+        copied.classList.remove('hidden');
+        setTimeout(()=>copied.classList.add('hidden'), 1200);
+        window.location.href = mailLink.href;
+      }catch(_){}
+    });
   </script>
 </body>
+</html>
 </html>
