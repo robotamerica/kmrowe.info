@@ -11,12 +11,14 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Header / bufferline -->
   <header class="bufferline" role="navigation" aria-label="bufferline">
     <div id="bufferTitle">:about</div>
     <div class="hint">Ctrl+T: theme · Esc / Ctrl+C: search</div>
   </header>
 
   <main class="nvim-layout centered">
+    <!-- Left rail: headshot + ANSI -->
     <aside class="left-rail">
       <img src="headshot.png" alt="Kevin M. Rowe" class="headshot-left" id="openCmdByClick">
       <pre class="ansi-logo" aria-label="km.rowe (ansi)">
@@ -35,6 +37,7 @@
       </pre>
     </aside>
   
+    <!-- Right pane: menu + content -->
     <section class="right-pane">
       <div class="titlebar">
         <div class="mode">MENU</div>
@@ -71,8 +74,6 @@
             <li><strong>Systems &amp; Ecology</strong> Soft Stack Ecology, regenerative design, solarpunk infrastructure, small-scale networked systems</li>
             <li><strong>Design &amp; Publishing</strong> Typography, layout systems, print-to-web/web-to-print translation, digital chapbooks, minimalist editorial design</li>
             <li><strong>Photography &amp; Fieldwork</strong> Working class documentation, urban + rural exploration</li>
-  </ul>
-</div>
           </ul>
         </div>
 
@@ -129,28 +130,55 @@
     </section>
   </main>
 
+  <!-- Footer / statusline -->
   <footer class="statusline" aria-hidden="true">
     <div class="left"><span class="pill">kmrowe.info</span> utf-8  unix</div>
     <div class="right" id="cursorPos">Ln 1, Col 1</div>
   </footer>
 
+  <!-- Command Palette -->
   <div id="cmd" class="cmd-overlay" aria-hidden="true">
-    <div class="cmd-card" role="dialog" aria-modal="true" aria-labelledby="cmdTitle" role="search">
+    <div class="cmd-card" role="dialog" aria-modal="true" aria-labelledby="cmdTitle">
       <div class="cmd-title" id="cmdTitle">Search content</div>
-      <input id="cmdInput" class="cmd-input" type="search" inputmode="search"
-             placeholder="Search site… (e.g., geographer, Leaflet, pedagogy)" autocomplete="off"
-             aria-label="Search site content">
+      <input
+        id="cmdInput"
+        class="cmd-input"
+        type="search"
+        inputmode="search"
+        placeholder="Search site… (e.g., geographer, Leaflet, pedagogy)"
+        autocomplete="off"
+        aria-label="Search site content">
       <ul id="cmdList" class="cmd-list" role="listbox" aria-label="Search results"></ul>
     </div>
   </div>
 
+  <!-- Trails for caret smear -->
   <div id="trails"></div>
 
+  <!-- Mobile notice (placed BEFORE the script so the nodes exist when JS runs) -->
+  <div id="mobileNotice" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mnTitle">
+      <h2 id="mnTitle" class="modal-title">Optimised for desktop</h2>
+      <p class="modal-text">
+        This site is designed for a desktop experience (keyboard shortcuts, widescreen layout).
+        You can continue on mobile, but some interactions may be limited.
+      </p>
+      <label class="modal-optout">
+        <input type="checkbox" id="mnDontShow">
+        Don’t show this again on this device
+      </label>
+      <div class="modal-actions">
+        <button id="mnContinue" class="btn-ghost">Continue</button>
+        <button id="mnOpenCmd" class="btn-accent">Open Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App script -->
   <script>
     (() => {
       'use strict';
-    
-      // ------- elements & state -------
+
       const rows       = [...document.querySelectorAll('.row')];
       const contents   = [...document.querySelectorAll('.tab-content')];
       const bufferTitle= document.getElementById('bufferTitle');
@@ -158,11 +186,10 @@
       const cmdInput   = document.getElementById('cmdInput');
       const cmdList    = document.getElementById('cmdList');
       const headshot   = document.getElementById('openCmdByClick');
-    
+
       let active = 0;
       let searchIndex = [];
-    
-      // ------- viewport sizing (Android-safe) -------
+
       const sized = () => {
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}`);
@@ -176,32 +203,30 @@
       window.addEventListener('resize', sized, {passive:true});
       window.addEventListener('orientationchange', sized);
       document.addEventListener('visibilitychange', () => { if (!document.hidden) sized(); }, {passive:true});
-    
-      // ------- section switching -------
+
       function setActive(i){
         if (!rows.length) return;
         if (i < 0) i = rows.length - 1;
         if (i >= rows.length) i = 0;
-    
+
         rows.forEach((r,idx)=> r.classList.toggle('active', idx === i));
         contents.forEach(c => c.classList.remove('active'));
-    
+
         const id = rows[i].dataset.tab;
         const target = id && document.getElementById(id);
         if (target) target.classList.add('active');
         if (bufferTitle) bufferTitle.textContent = ':' + id;
-    
+
         active = i;
       }
-      window.setActive = setActive; // keep your global hook
-    
+      window.setActive = setActive;
+
       setActive(0);
       rows.forEach((r,idx) => {
         const btn = r.querySelector('.btn');
         if (btn) btn.addEventListener('click', () => setActive(idx));
       });
-    
-      // first-letter quick keys (cycle dupes)
+
       const indexByLetter = {};
       const cyclePos = {};
       rows.forEach((r,idx)=>{
@@ -210,12 +235,11 @@
         const letter = btn.textContent.trim().charAt(0).toLowerCase();
         (indexByLetter[letter] ??= []).push(idx);
       });
-    
-      // ------- search palette -------
+
       const escMap = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
       const escHTML = s => s.replace(/[&<>"']/g, c => escMap[c]);
       const escRe   = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    
+
       function clearHighlights(){
         contents.forEach(tab => {
           tab.querySelectorAll('mark.hit').forEach(mark => {
@@ -225,7 +249,7 @@
           tab.normalize();
         });
       }
-    
+
       function highlightAndScroll(tabId, query){
         if(!query) return;
         const tab = document.getElementById(tabId);
@@ -234,7 +258,7 @@
         const walker = document.createTreeWalker(tab, NodeFilter.SHOW_TEXT, null);
         const nodes = [];
         while (walker.nextNode()) nodes.push(walker.currentNode);
-    
+
         nodes.forEach(node => {
           const val = node.nodeValue;
           if(!re.test(val)){ re.lastIndex = 0; return; }
@@ -252,11 +276,11 @@
           frag.append(document.createTextNode(val.slice(last)));
           node.parentNode.replaceChild(frag, node);
         });
-    
+
         const first = tab.querySelector('mark.hit');
         if(first) first.scrollIntoView({behavior:'smooth', block:'center', inline:'nearest'});
       }
-    
+
       function buildIndex(){
         searchIndex = rows.map((r, idx) => {
           const btn   = r.querySelector('.btn');
@@ -267,8 +291,7 @@
           return { label, idx, tabId, text };
         });
       }
-    
-      // subsequence-ish score (your logic, kept)
+
       function fuzzyScore(text, query){
         const a = text.toLowerCase(), b = query.toLowerCase();
         let ti = 0, qi = 0, score = 0, streak = 0;
@@ -279,7 +302,7 @@
         }
         return (qi === b.length) ? score - (a.length - b.length) : -1;
       }
-    
+
       function getSnippets(text, query, maxSnips = 2, radius = 48){
         const out = [];
         if(!query) return out;
@@ -299,11 +322,11 @@
         }
         return out;
       }
-    
+
       function renderCmdList(q){
         if(!cmdList) return;
         while (cmdList.firstChild) cmdList.removeChild(cmdList.firstChild);
-    
+
         if(!q){
           searchIndex.forEach((x,i)=>{
             const li = document.createElement('li');
@@ -318,7 +341,7 @@
           });
           return;
         }
-    
+
         const filtered = searchIndex
           .map(x => {
             const bodyHas = x.text.toLowerCase().includes(q.toLowerCase());
@@ -332,7 +355,7 @@
           .filter(Boolean)
           .sort((a,b)=> b.score - a.score)
           .slice(0, 24);
-    
+
         if(filtered.length === 0){
           const li = document.createElement('li');
           li.textContent = 'No matches';
@@ -340,40 +363,41 @@
           cmdList.append(li);
           return;
         }
-    
+
         const reInline = new RegExp(escRe(q), 'ig');
         filtered.forEach((x,i)=>{
           const li = document.createElement('li');
           li.className = 'cmd-item' + (i===0?' selected':'');
           li.dataset.idx = String(x.idx);
           li.dataset.tab = x.tabId;
-    
+
           const lab = document.createElement('span');
           lab.className = 'cmd-label';
           lab.textContent = x.label;
           li.append(lab);
-    
+
           x.snips.forEach(sn => {
             const span = document.createElement('span');
             span.className = 'cmd-snippet';
             span.innerHTML = escHTML(sn).replace(reInline, m => `<mark class="hit-inline">${escHTML(m)}</mark>`);
             li.append(span);
           });
-    
+
           cmdList.append(li);
         });
       }
-    
+
       function openCmd(){
         if (!cmd || !cmdInput) return;
         const t = document.getElementById('cmdTitle'); if (t) t.textContent = 'Search content';
         buildIndex();
         cmd.style.display = 'grid';
         cmd.setAttribute('aria-hidden','false');
-        document.body.style.overflow = 'hidden';  // lock page scroll behind overlay
+        document.body.style.overflow = 'hidden';
         cmdInput.value = '';
         renderCmdList('');
         cmdInput.focus();
+        const v = cmdInput.value; cmdInput.setSelectionRange(v.length, v.length);
       }
       function closeCmd(){
         if (!cmd) return;
@@ -381,16 +405,18 @@
         cmd.setAttribute('aria-hidden','true');
         document.body.style.overflow = '';
       }
-    
+      window.openCmd = openCmd;
+
+      if (cmd) cmd.addEventListener('click', (e)=>{ if (e.target === cmd) closeCmd(); });
       if (headshot) headshot.addEventListener('click', openCmd);
-    
+
       if (cmdInput) cmdInput.addEventListener('input', (e)=> renderCmdList(e.target.value));
       if (cmdInput) cmdInput.addEventListener('keydown', (e)=>{
         const items = [...cmdList.querySelectorAll('.cmd-item')];
         if(items.length === 0) return;
         let sel = items.findIndex(el => el.classList.contains('selected'));
         if(sel < 0) sel = 0;
-    
+
         if(e.key === 'ArrowDown'){ e.preventDefault(); items[sel].classList.remove('selected'); sel = (sel+1)%items.length; items[sel].classList.add('selected'); return; }
         if(e.key === 'ArrowUp'){ e.preventDefault(); items[sel].classList.remove('selected'); sel = (sel-1+items.length)%items.length; items[sel].classList.add('selected'); return; }
         if(e.key === 'Enter'){
@@ -408,7 +434,7 @@
         }
         if(e.key === 'Escape'){ e.preventDefault(); closeCmd(); }
       });
-    
+
       if (cmdList) cmdList.addEventListener('click',(e)=>{
         const li = e.target.closest('.cmd-item'); if(!li) return;
         const idx = Number.parseInt(li.dataset.idx,10);
@@ -421,8 +447,7 @@
           if (q) highlightAndScroll(tabId, q);
         }
       });
-    
-      // ------- global keys -------
+
       window.addEventListener('keydown', (e)=>{
         const tag = (e.target.tagName || '').toLowerCase();
         if(tag === 'input' || tag === 'textarea' || e.target.isContentEditable){
@@ -445,22 +470,20 @@
           }
         }
       }, {passive:false});
-    
-      // ------- statusline cursor flavor -------
+
       document.addEventListener('mousemove', (e)=>{
         const x = Math.max(1, Math.round((e.clientX / window.innerWidth)*80));
         const y = Math.max(1, Math.round((e.clientY / window.innerHeight)*24));
         const c = document.getElementById('cursorPos');
         if (c) c.textContent = 'Ln ' + y + ', Col ' + x;
       }, {passive:true});
-    
-      // ------- safe contact reveal -------
+
       const b64 = "a2V2aW4ubWF0dGhldy5yb3dlQGdtYWlsLmNvbQ==";
       const revealBtn = document.getElementById('revealMail');
       const mailLink  = document.getElementById('mailLink');
       const copied    = document.getElementById('copied');
       const decode = b => { try{ return atob(b); } catch { return ''; } };
-    
+
       if (revealBtn) revealBtn.addEventListener('click', ()=>{
         const addr = decode(b64);
         if (mailLink){
@@ -470,7 +493,7 @@
         }
         revealBtn.classList.add('hidden');
       });
-    
+
       if (mailLink) mailLink.addEventListener('click', async (e)=>{
         e.preventDefault();
         try{
@@ -486,69 +509,59 @@
       });
 
       (function mobileOptimisedNotice(){
-  const overlay = document.getElementById('mobileNotice');
-  const btnContinue = document.getElementById('mnContinue');
-  const btnOpenCmd  = document.getElementById('mnOpenCmd');
-  const cbDontShow  = document.getElementById('mnDontShow');
+        const overlay     = document.getElementById('mobileNotice');
+        const btnContinue = document.getElementById('mnContinue');
+        const btnOpenCmd  = document.getElementById('mnOpenCmd');
+        const cbDontShow  = document.getElementById('mnDontShow');
 
-  if(!overlay || !btnContinue || !btnOpenCmd || !cbDontShow) return;
+        if(!overlay || !btnContinue || !btnOpenCmd || !cbDontShow) return;
 
-  const KEY = 'km_mobile_notice_optout_v1';
+        const KEY = 'km_mobile_notice_optout_v1';
 
-  function isLikelyMobile(){
-    const narrow = window.matchMedia('(max-width: 780px)').matches;
-    const touch  = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    return narrow && touch;
-  }
+        function isLikelyMobile(){
+          const narrow = window.matchMedia('(max-width: 780px)').matches;
+          const touch  = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+          return narrow && touch;
+        }
 
-  function show(){
-    overlay.style.display = 'grid';
-    overlay.setAttribute('aria-hidden', 'false');
-    // trap focus minimally
-    btnContinue.focus();
-    document.body.style.overflow = 'hidden';
-  }
-  function hide(){
-    overlay.style.display = 'none';
-    overlay.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
+        function show(){
+          overlay.style.display = 'grid';
+          overlay.setAttribute('aria-hidden', 'false');
+          btnContinue.focus();
+          document.body.style.overflow = 'hidden';
+        }
+        function hide(){
+          overlay.style.display = 'none';
+          overlay.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
 
-  // Dismiss handlers
-  btnContinue.addEventListener('click', () => {
-    if (cbDontShow.checked) localStorage.setItem(KEY, '1');
-    hide();
-  });
+        btnContinue.addEventListener('click', () => {
+          if (cbDontShow.checked) localStorage.setItem(KEY, '1');
+          hide();
+        });
 
-  btnOpenCmd.addEventListener('click', () => {
-    if (cbDontShow.checked) localStorage.setItem(KEY, '1');
-    hide();
-    // open your palette + focus input -> mobile keyboard appears
-    if (typeof openCmd === 'function') openCmd();
-  });
+        btnOpenCmd.addEventListener('click', () => {
+          if (cbDontShow.checked) localStorage.setItem(KEY, '1');
+          hide();
+          if (typeof window.openCmd === 'function') window.openCmd();
+        });
 
-  // Close on ESC and overlay click
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) hide(); });
-  window.addEventListener('keydown', (e) => {
-    if (overlay.style.display === 'grid' && e.key === 'Escape') hide();
-  });
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) hide(); });
+        window.addEventListener('keydown', (e) => {
+          if (overlay.style.display === 'grid' && e.key === 'Escape') hide();
+        });
 
-  // Show once per device unless opted out
-  const optedOut = localStorage.getItem(KEY) === '1';
-  if (isLikelyMobile() && !optedOut) {
-    // slight delay so layout settles; avoids jank on Android URL bar
-    setTimeout(show, 120);
-  }
+        const optedOut = localStorage.getItem(KEY) === '1';
+        if (isLikelyMobile() && !optedOut) setTimeout(show, 120);
 
-  // If viewport changes (rotate), don’t re-show if dismissed
-  window.addEventListener('orientationchange', () => {
-    if (overlay.style.display !== 'grid' && isLikelyMobile() && !localStorage.getItem(KEY)) {
-      setTimeout(show, 150);
-    }
-  });
-})();
-    
-      // ------- caret smear -------
+        window.addEventListener('orientationchange', () => {
+          if (overlay.style.display !== 'grid' && isLikelyMobile() && !localStorage.getItem(KEY)) {
+            setTimeout(show, 150);
+          }
+        });
+      })();
+
       const trails = document.getElementById('trails');
       if (trails){
         const N = 12;
@@ -576,23 +589,6 @@
         })();
       }
     })();
-    </script>
-    <div id="mobileNotice" class="modal-overlay" aria-hidden="true">
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mnTitle">
-        <h2 id="mnTitle" class="modal-title">Optimised for desktop</h2>
-        <p class="modal-text">
-          This site is designed for a desktop experience (keyboard shortcuts, widescreen layout).
-          You can continue on mobile, but some interactions may be limited.
-        </p>
-        <label class="modal-optout">
-          <input type="checkbox" id="mnDontShow">
-          Don’t show this again on this device
-        </label>
-        <div class="modal-actions">
-          <button id="mnContinue" class="btn-ghost">Continue</button>
-          <button id="mnOpenCmd" class="btn-accent">Open Search</button>
-        </div>
-      </div>
-    </div>
+  </script>
 </body>
 </html>
