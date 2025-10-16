@@ -32,6 +32,39 @@ a:hover{ color:var(--green); border-bottom-color:currentColor }
 body.light a:hover{ color:#16794e }
 a:focus-visible{ outline:none; box-shadow:0 0 0 2px var(--accent); border-radius:.15rem }
 
+/* Mobile desktop-optimised notice */
+.modal-overlay{
+  position:fixed; inset:0; display:none; place-items:center; z-index:120;
+  background:rgba(0,0,0,.6); backdrop-filter:blur(6px);
+}
+.modal-card{
+  width:min(520px,92vw);
+  background:var(--bg); border:1px solid var(--border); border-radius:14px;
+  box-shadow:var(--shadow); padding:1rem 1.1rem;
+}
+.modal-title{ margin:0 0 .4rem 0; font-weight:700; color:var(--green) }
+.modal-text{ margin:.25rem 0 .75rem 0; opacity:.9 }
+.modal-optout{ display:flex; align-items:center; gap:.5rem; font-size:.95rem; opacity:.9; margin-bottom:.85rem }
+.modal-actions{ display:flex; gap:.6rem; justify-content:flex-end }
+
+.btn-ghost{
+  background:transparent; color:var(--fg);
+  border:1px solid var(--border); border-radius:.45rem; padding:.45rem .8rem;
+}
+.btn-ghost:focus-visible{ outline:none; box-shadow:0 0 0 2px var(--accent) }
+
+.btn-accent{
+  background:rgba(122,162,247,.16); color:var(--fg);
+  border:1px solid var(--accent); border-radius:.45rem; padding:.45rem .8rem;
+}
+.btn-accent:hover{ background:rgba(122,162,247,.24) }
+.btn-accent:focus-visible{ outline:none; box-shadow:0 0 0 2px var(--accent) }
+
+@media (min-width: 781px){
+  /* Never show on desktop widths */
+  #mobileNotice{ display:none !important; }
+}
+
 /* Cursor & trails */
 body{
   cursor:url("data:image/svg+xml;utf8,\
