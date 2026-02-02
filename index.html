@@ -9,15 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="preload" href="styles.css" as="style">
   <link rel="stylesheet" href="styles.css">
-
-  <!-- keystroke "echo" flash (minimal + safe to layer on top of your existing CSS) -->
-  <style>
-    .row.flash{
-      background: rgba(160, 255, 180, 0.08);
-      box-shadow: inset 0 0 0 2px rgba(160, 255, 180, 0.35);
-      transition: background 140ms ease, box-shadow 140ms ease;
-    }
-  </style>
 </head>
 
 <body>
@@ -31,8 +22,8 @@
       <img src="headshot.png" alt="Kevin M. Rowe" class="headshot-left" id="openCmdByClick">
       <pre class="ansi-logo" aria-label="km.rowe (ansi)">
         <span class="rainbow">
-         █████                                                                   
-        ░░███                                                                    
+        █████                                                                   
+       ░░███                                                                    
          ░███ █████ █████████████      ████████   ██████  █████ ███ █████  ██████ 
          ░███░░███ ░░███░░███░░███    ░░███░░███ ███░░███░░███ ░███░░███  ███░░███
          ░██████░   ░███ ░███ ░███     ░███ ░░░ ░███ ░███ ░███ ░███ ░███ ░███████ 
@@ -44,7 +35,7 @@
         <span class="c2 subline">       artist · photographer · poet</span>
       </pre>
     </aside>
-  
+
     <section class="right-pane">
       <div class="titlebar">
         <div class="mode">MENU</div>
@@ -52,12 +43,12 @@
 
       <div class="menu-window">
         <ul id="menuList" class="menu-grid" role="listbox" aria-label="Main">
-          <li class="row active" data-tab="about"><span class="k">a</span><button class="btn" type="button">About</button><span class="k">Select</span></li>
-          <li class="row" data-tab="profile"><span class="k">p</span><button class="btn" type="button">Profile</button><span class="k"></span></li>
-          <li class="row" data-tab="projects"><span class="k">p</span><button class="btn" type="button">Projects</button><span class="k"></span></li>
-          <li class="row" data-tab="education"><span class="k">e</span><button class="btn" type="button">Education</button><span class="k"></span></li>
-          <li class="row" data-tab="philosophy"><span class="k">p</span><button class="btn" type="button">Philosophy</button><span class="k"></span></li>
-          <li class="row" data-tab="links"><span class="k">l</span><button class="btn" type="button">Links</button><span class="k"></span></li>
+          <li class="row active" data-tab="about"><span class="k">⚑</span><button class="btn" type="button">About</button><span class="k">Select</span></li>
+          <li class="row" data-tab="profile"><span class="k">☺</span><button class="btn" type="button">Profile</button><span class="k"></span></li>
+          <li class="row" data-tab="projects"><span class="k">⌨</span><button class="btn" type="button">Projects</button><span class="k"></span></li>
+          <li class="row" data-tab="education"><span class="k">✎</span><button class="btn" type="button">Education</button><span class="k"></span></li>
+          <li class="row" data-tab="philosophy"><span class="k">ɸ</span><button class="btn" type="button">Philosophy</button><span class="k"></span></li>
+          <li class="row" data-tab="links"><span class="k">☍</span><button class="btn" type="button">Links</button><span class="k"></span></li>
         </ul>
       </div>
 
@@ -163,16 +154,6 @@
       const bufferTitle = document.getElementById('bufferTitle');
       let active = 0;
 
-      function flashRow(i){
-        const r = rows[i];
-        if(!r) return;
-        r.classList.remove('flash');     // restart animation if it's already on
-        void r.offsetWidth;              // force reflow
-        r.classList.add('flash');
-        window.clearTimeout(r._flashTO);
-        r._flashTO = window.setTimeout(() => r.classList.remove('flash'), 180);
-      }
-
       function setActive(i){
         if(i < 0) i = rows.length - 1;
         if(i >= rows.length) i = 0;
@@ -190,23 +171,11 @@
       window.setActive = setActive;
 
       setActive(0);
+
       rows.forEach((r, idx) => {
         const btn = r.querySelector('.btn');
         if (btn) btn.addEventListener('click', () => setActive(idx), { passive: true });
       });
-
-      // build shortcut index from the explicit shortcut letter (left column),
-      // not from the button label
-      const indexByLetter = Object.create(null);
-      rows.forEach((r, idx) => {
-        const shortcutEl = r.querySelector('.k'); // first .k in row = shortcut letter
-        const letter = (shortcutEl?.textContent || '').trim().toLowerCase().charAt(0);
-        if (!letter) return;
-        (indexByLetter[letter] ??= []).push(idx);
-      });
-
-      const cyclePos = Object.create(null);
-      let lastLetter = null;
 
       const cmd = document.getElementById('cmd');
       const cmdInput = document.getElementById('cmdInput');
@@ -428,6 +397,11 @@
             highlightAndScroll(tabId, cmdInput.value.trim());
           }
         }
+
+        if(e.key === 'Escape'){
+          e.preventDefault();
+          closeCmd();
+        }
       });
 
       if (cmdList) cmdList.addEventListener('click', (e) => {
@@ -444,6 +418,7 @@
         }
       });
 
+      // global keyboard controls: keep arrows (and optionally j/k), remove a/p/e/l letter jumping
       window.addEventListener('keydown', (e) => {
         const tag = (e.target.tagName || '').toLowerCase();
         if(tag === 'input' || tag === 'textarea' || e.target.isContentEditable){
@@ -451,59 +426,37 @@
           return;
         }
 
+        // theme toggle
         if(e.ctrlKey && (e.key === 't' || e.key === 'T')){
           e.preventDefault();
           document.body.classList.toggle('light');
           return;
         }
 
+        // open command palette
         if(e.key === 'Escape' || (e.ctrlKey && (e.key === 'c' || e.key === 'C'))){
           e.preventDefault();
           openCmd();
           return;
         }
 
-        if(['ArrowDown','j','J'].includes(e.key)){
+        // menu navigation: arrows + (optional) j/k
+        if(e.key === 'ArrowDown' || e.key === 'j' || e.key === 'J'){
           e.preventDefault();
           setActive(active + 1);
           return;
         }
-
-        if(['ArrowUp','k','K'].includes(e.key)){
+        if(e.key === 'ArrowUp' || e.key === 'k' || e.key === 'K'){
           e.preventDefault();
           setActive(active - 1);
           return;
         }
 
+        // enter: keep current section selected (no-op but preserves your behavior)
         if(e.key === 'Enter'){
           e.preventDefault();
           setActive(active);
           return;
-        }
-
-        // ignore modified keystrokes so browser/OS shortcuts still work
-        if (e.ctrlKey || e.metaKey || e.altKey) return;
-
-        // letter shortcuts: cycle matches + flash the matched row
-        if(e.key && e.key.length === 1){
-          const letter = e.key.toLowerCase();
-          const list = indexByLetter[letter];
-          if(!list) return;
-
-          e.preventDefault();
-
-          // reset cycling when switching letters
-          if (lastLetter !== letter) {
-            cyclePos[letter] = -1;
-            lastLetter = letter;
-          }
-
-          const next = ((cyclePos[letter] ?? -1) + 1) % list.length;
-          cyclePos[letter] = next;
-
-          const idx = list[next];
-          setActive(idx);
-          flashRow(idx);
         }
       }, { passive: false });
 
