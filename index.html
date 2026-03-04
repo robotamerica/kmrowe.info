@@ -132,7 +132,23 @@
     <div class="left"><span class="pill">kmrowe.info</span> utf-8  unix</div>
     <div class="right" id="cursorPos">Ln 1, Col 1</div>
   </footer>
-
+    <div id="mobileNotice" class="modal-overlay" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mnTitle">
+        <h2 id="mnTitle" class="modal-title">Optimised for desktop</h2>
+        <p class="modal-text">
+          This site is designed for a desktop experience (keyboard shortcuts, widescreen layout).
+          You can continue on mobile, but some interactions may be limited.
+        </p>
+        <label class="modal-optout">
+          <input type="checkbox" id="mnDontShow">
+          Don’t show this again on this device
+        </label>
+        <div class="modal-actions">
+          <button id="mnContinue" class="btn-ghost">Continue</button>
+          <button id="mnOpenCmd" class="btn-accent">Open Search</button>
+        </div>
+      </div>
+    </div>
   <div id="cmd" class="cmd-overlay" aria-hidden="true">
     <div class="cmd-card" role="dialog" aria-modal="true" aria-labelledby="cmdTitle">
       <div class="cmd-title" id="cmdTitle">Search content</div>
@@ -537,7 +553,7 @@
   btnOpenCmd.addEventListener('click', () => {
     if (cbDontShow.checked) localStorage.setItem(KEY, '1');
     hide();
-    // open your palette + focus input -> mobile keyboard appears
+    // open palette + focus input -> mobile keyboard appears
     if (typeof openCmd === 'function') openCmd();
   });
 
@@ -550,7 +566,7 @@
   // Show once per device unless opted out
   const optedOut = localStorage.getItem(KEY) === '1';
   if (isLikelyMobile() && !optedOut) {
-    // slight delay so layout settles; avoids jank on Android URL bar
+    // slight delay
     setTimeout(show, 120);
   }
 
@@ -593,22 +609,5 @@
       }
     })();
   </script>
-    <div id="mobileNotice" class="modal-overlay" aria-hidden="true">
-      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mnTitle">
-        <h2 id="mnTitle" class="modal-title">Optimised for desktop</h2>
-        <p class="modal-text">
-          This site is designed for a desktop experience (keyboard shortcuts, widescreen layout).
-          You can continue on mobile, but some interactions may be limited.
-        </p>
-        <label class="modal-optout">
-          <input type="checkbox" id="mnDontShow">
-          Don’t show this again on this device
-        </label>
-        <div class="modal-actions">
-          <button id="mnContinue" class="btn-ghost">Continue</button>
-          <button id="mnOpenCmd" class="btn-accent">Open Search</button>
-        </div>
-      </div>
-    </div>
 </body>
 </html>
