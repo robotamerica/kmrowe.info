@@ -418,7 +418,7 @@
         }
       });
 
-      // global keyboard controls: keep arrows (and optionally j/k), remove a/p/e/l letter jumping
+      // global keyboard controls
       window.addEventListener('keydown', (e) => {
         const tag = (e.target.tagName || '').toLowerCase();
         if(tag === 'input' || tag === 'textarea' || e.target.isContentEditable){
@@ -440,7 +440,7 @@
           return;
         }
 
-        // menu navigation: arrows + (optional) j/k
+        // menu navigation
         if(e.key === 'ArrowDown' || e.key === 'j' || e.key === 'J'){
           e.preventDefault();
           setActive(active + 1);
@@ -452,7 +452,7 @@
           return;
         }
 
-        // enter: keep current section selected (no-op but preserves your behavior)
+        // enter: keep current section selected
         if(e.key === 'Enter'){
           e.preventDefault();
           setActive(active);
@@ -498,6 +498,70 @@
         }
       });
 
+      
+      (function mobileOptimisedNotice(){
+  const overlay = document.getElementById('mobileNotice');
+  const btnContinue = document.getElementById('mnContinue');
+  const btnOpenCmd  = document.getElementById('mnOpenCmd');
+  const cbDontShow  = document.getElementById('mnDontShow');
+
+  if(!overlay || !btnContinue || !btnOpenCmd || !cbDontShow) return;
+
+  const KEY = 'km_mobile_notice_optout_v1';
+
+  function isLikelyMobile(){
+    const narrow = window.matchMedia('(max-width: 780px)').matches;
+    const touch  = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    return narrow && touch;
+  }
+
+  function show(){
+    overlay.style.display = 'grid';
+    overlay.setAttribute('aria-hidden', 'false');
+    // trap focus minimally
+    btnContinue.focus();
+    document.body.style.overflow = 'hidden';
+  }
+  function hide(){
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // Dismiss handlers
+  btnContinue.addEventListener('click', () => {
+    if (cbDontShow.checked) localStorage.setItem(KEY, '1');
+    hide();
+  });
+
+  btnOpenCmd.addEventListener('click', () => {
+    if (cbDontShow.checked) localStorage.setItem(KEY, '1');
+    hide();
+    // open your palette + focus input -> mobile keyboard appears
+    if (typeof openCmd === 'function') openCmd();
+  });
+
+  // Close on ESC and overlay click
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) hide(); });
+  window.addEventListener('keydown', (e) => {
+    if (overlay.style.display === 'grid' && e.key === 'Escape') hide();
+  });
+
+  // Show once per device unless opted out
+  const optedOut = localStorage.getItem(KEY) === '1';
+  if (isLikelyMobile() && !optedOut) {
+    // slight delay so layout settles; avoids jank on Android URL bar
+    setTimeout(show, 120);
+  }
+
+  // If viewport changes (rotate), don’t re-show if dismissed
+  window.addEventListener('orientationchange', () => {
+    if (overlay.style.display !== 'grid' && isLikelyMobile() && !localStorage.getItem(KEY)) {
+      setTimeout(show, 150);
+    }
+  });
+})();
+      
       const trails = document.getElementById('trails');
       if (trails){
         const N = 12;
@@ -529,5 +593,22 @@
       }
     })();
   </script>
+    <div id="mobileNotice" class="modal-overlay" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mnTitle">
+        <h2 id="mnTitle" class="modal-title">Optimised for desktop</h2>
+        <p class="modal-text">
+          This site is designed for a desktop experience (keyboard shortcuts, widescreen layout).
+          You can continue on mobile, but some interactions may be limited.
+        </p>
+        <label class="modal-optout">
+          <input type="checkbox" id="mnDontShow">
+          Don’t show this again on this device
+        </label>
+        <div class="modal-actions">
+          <button id="mnContinue" class="btn-ghost">Continue</button>
+          <button id="mnOpenCmd" class="btn-accent">Open Search</button>
+        </div>
+      </div>
+    </div>
 </body>
 </html>
